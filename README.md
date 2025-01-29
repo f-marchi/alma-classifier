@@ -2,7 +2,7 @@
 
 A Python package for applying pre-trained epigenomic classification models to methylation data. This package provides two main predictive models:
 
-1. **AL Epigenomic Subtype**: Predicts 28 subtypes/classes (27 WHO 2022 subtypes of acute leukemia + otherwise-normal control).
+1. **ALMA Subtype**: Predicts 28 subtypes/classes (27 WHO 2022 subtypes of acute leukemia + otherwise-normal control).
 2. **AML Epigenomic Risk**: Predicts the probability of death within 5 years for AML patients.
 
 ## Installation
@@ -93,17 +93,6 @@ The input data should be a matrix of methylation beta values with:
 - Rows representing samples
 - Columns representing CpG sites
 - Values between 0 and 1
-
-## Output Format
-
-The predictor returns a DataFrame with the following columns:
-
-- `AL Epigenomic Subtype`: Predicted leukemia subtype
-- `AML Epigenomic Risk`: Risk level (High/Low) for AML samples
-- `P(Subtype)`: Probability scores for each subtype
-- `P(Remission) at 5y`: Probability of 5-year remission
-- `P(Death) at 5y`: Probability of death within 5 years
-- Confidence indicators for predictions
 
 ## Citation
 

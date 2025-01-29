@@ -1,4 +1,3 @@
-
 """Main predictor class for ALMA classifier."""
 import numpy as np
 import pandas as pd
@@ -13,7 +12,7 @@ class ALMAPredictor:
     
     Provides methods for:
     - Epigenetic subtype classification
-    - AML risk stratification
+    - AML risk stratification for AML/MDS samples only
     """
     
     def __init__(self, confidence_threshold: float = 0.5):
@@ -28,8 +27,7 @@ class ALMAPredictor:
         
     def predict(
         self,
-        data: Union[pd.DataFrame, str, Path]):
-        
+        data: Union[pd.DataFrame, str, Path]) -> pd.DataFrame:
         """
         Generate predictions for new samples.
         
@@ -45,8 +43,28 @@ class ALMAPredictor:
         # Apply PaCMAP dimension reduction
         features = apply_pacmap(methyl_data, self.pacmap_model)
         
-        # Generate predictions
-        return self._predict_subtype(features)
+        # Generate subtype predictions first
+        subtype_results = self._predict_subtype(features)
+        
+        # Initialize empty risk results with same index as features
+        risk_results = pd.DataFrame(index=features.index)
+        
+        # Add risk prediction columns with NaN values
+        risk_columns = ['AML Epigenomic Risk', 'P(Death) at 5y', f'Risk >{self.confidence_threshold*100}% Confidence']
+        for col in risk_columns:
+            risk_results[col] = np.nan
+        
+        # Generate risk predictions only for AML/MDS samples
+        is_aml_mds = subtype_results['ALMA Subtype'].str.startswith(('AML', 'MDS'), na=False)
+        
+        if is_aml_mds.any():
+            aml_features = features[is_aml_mds]
+            risk_predictions = self._predict_risk(aml_features)
+            # Update only the rows that have AML/MDS predictions
+            risk_results.loc[is_aml_mds] = risk_predictions
+            
+        # Combine results
+        return pd.concat([subtype_results, risk_results], axis=1)
     
     def _predict_subtype(self, features: pd.DataFrame) -> pd.DataFrame:
         """Generate epigenetic subtype predictions."""
@@ -56,31 +74,21 @@ class ALMAPredictor:
         
         # Create results DataFrame
         results = pd.DataFrame(index=features.index)
-        results['AL Epigenomic Subtype'] = pd.Series(preds, index=features.index)
+        results['ALMA Subtype'] = pd.Series(preds, index=features.index)
         
-        # Add probability columns
-        prob_cols = [f'P({c})' for c in self.lgbm_models['subtype'].classes_]
-        results[prob_cols] = pd.DataFrame(probs, index=features.index)
+        # Add probability only for predicted class
+        predicted_probs = np.array([probs[i, self.lgbm_models['subtype'].classes_ == pred][0] 
+                                  for i, pred in enumerate(preds)])
+        results['P(Predicted Subtype)'] = predicted_probs
         
         # Add confidence indicator
-        max_prob = results[prob_cols].max(axis=1)
-        results['AL Epigenomic Subtype'][max_prob < self.confidence_threshold] = np.nan
-        results[f'Subtype >{self.confidence_threshold*100}% Confidence'] = max_prob >= self.confidence_threshold
-        
-        # Check for AML or MDS and run risk prediction if found
-        if any('AML' in pred or 'MDS' in pred for pred in preds):
-            risk_results = self._predict_risk(features)
-            results = pd.concat([results, risk_results], axis=1)
-        else:
-            results['AML Epigenomic Risk'] = "AML or MDS not detected"
-            results['P(Remission) at 5y'] = np.nan
-            results['P(Death) at 5y'] = np.nan
-            results[f'Risk >{self.confidence_threshold*100}% Confidence'] = np.nan
+        results['ALMA Subtype'][predicted_probs < self.confidence_threshold] = np.nan
+        results[f'Subtype >{self.confidence_threshold*100}% Confidence'] = predicted_probs >= self.confidence_threshold
         
         return results
     
     def _predict_risk(self, features: pd.DataFrame) -> pd.DataFrame:
-        """Generate AML risk predictions."""
+        """Generate AML risk predictions for AML/MDS samples."""
         # Get model predictions
         preds = self.lgbm_models['risk'].predict(features)
         probs = self.lgbm_models['risk'].predict_proba(features)
@@ -93,8 +101,7 @@ class ALMAPredictor:
         results['AML Epigenomic Risk'] = results['AML Epigenomic Risk'].map(
             {'Alive': 'Low', 'Dead': 'High'})
         
-        # Add probability columns 
-        results['P(Remission) at 5y'] = probs[:,0]
+        # Add only P(Death) probability
         results['P(Death) at 5y'] = probs[:,1]
         
         # Add confidence indicator

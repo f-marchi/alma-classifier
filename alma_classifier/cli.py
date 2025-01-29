@@ -28,12 +28,7 @@ def main():
         default=0.5,
         help="Confidence threshold for predictions (default: 0.5)"
     )
-    parser.add_argument(
-        "--sample-type",
-        type=str,
-        help="Optional sample type information"
-    )
-    
+
     args = parser.parse_args()
     
     try:
@@ -51,7 +46,6 @@ def main():
         # Generate predictions
         results = predictor.predict(
             data=args.input,
-            sample_type=args.sample_type
         )
         
         # Export results

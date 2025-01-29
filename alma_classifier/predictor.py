@@ -10,7 +10,7 @@ from .utils import check_lymphoblastic_samples
 
 class ALMAPredictor:
     """
-    ALMA (Acute Leukemia Methylation Analysis) predictor class.
+    ALMA (Acute Leukemia Methylome Atlas) predictor class.
     
     Provides methods for:
     - Epigenetic subtype classification

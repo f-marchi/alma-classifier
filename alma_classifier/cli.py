@@ -42,7 +42,7 @@ def main():
             import pacmap
         except ImportError:
             print("Error: pacmap package is required but not installed.")
-            print("Please install it using: pip install pacmap~=0.7.0")
+            print("Please install it using: pip install pacmap==0.7.0")
             sys.exit(1)
             
         # Initialize predictor

@@ -46,8 +46,7 @@ class ALMAPredictor:
         methyl_data = process_methylation_data(data)
         
         # Apply PaCMAP dimension reduction
-        df_2d, df_5d = apply_pacmap(methyl_data, self.pacmap_models)
-        features = pd.concat([df_2d, df_5d], axis=1)
+        features = apply_pacmap(methyl_data, self.pacmap_model)
         
         # Generate predictions
         subtype_preds = self._predict_subtype(features)

@@ -9,8 +9,6 @@ MODEL_URLS = {
     'imputer_model.joblib': 'https://github.com/f-marchi/ALMA-classifier/releases/download/0.1.0/imputer_model.joblib',
     'lgbm_dx_model.pkl': 'https://github.com/f-marchi/ALMA-classifier/releases/download/0.1.0/lgbm_dx_model.pkl',
     'lgbm_px_model.pkl': 'https://github.com/f-marchi/ALMA-classifier/releases/download/0.1.0/lgbm_px_model.pkl',
-    'pacmap_2d_model_alma.ann': 'https://github.com/f-marchi/ALMA-classifier/releases/download/0.1.0/pacmap_2d_model_alma.ann',
-    'pacmap_2d_model_alma.pkl': 'https://github.com/f-marchi/ALMA-classifier/releases/download/0.1.0/pacmap_2d_model_alma.pkl',
     'pacmap_5d_model_alma.ann': 'https://github.com/f-marchi/ALMA-classifier/releases/download/0.1.0/pacmap_5d_model_alma.ann',
     'pacmap_5d_model_alma.pkl': 'https://github.com/f-marchi/ALMA-classifier/releases/download/0.1.0/pacmap_5d_model_alma.pkl'
 }

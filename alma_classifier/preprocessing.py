@@ -52,26 +52,21 @@ def process_methylation_data(
 
 def apply_pacmap(
     data: pd.DataFrame,
-    pacmap_models: dict
-) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    pacmap_model: Any
+) -> pd.DataFrame:
     """
     Apply PaCMAP dimension reduction.
     
     Args:
         data: Methylation beta values
-        pacmap_models: Dictionary of PaCMAP models
+        pacmap_model: PaCMAP model
         
     Returns:
-        2D and 5D PaCMAP embeddings
+        5D PaCMAP embedding
     """
-    # Apply 2D PaCMAP
-    embedding_2d = pacmap_models['2d'].transform(data.to_numpy(dtype='float16'))
-    cols_2d = ['PaCMAP 1 of 2', 'PaCMAP 2 of 2']
-    df_2d = pd.DataFrame(embedding_2d, columns=cols_2d, index=data.index)
-
     # Apply 5D PaCMAP
-    embedding_5d = pacmap_models['5d'].transform(data.to_numpy(dtype='float16'))
-    cols_5d = [f'PaCMAP {i+1} of 5' for i in range(5)]
-    df_5d = pd.DataFrame(embedding_5d, columns=cols_5d, index=data.index)
+    embedding = pacmap_model.transform(data.to_numpy(dtype='float16'))
+    cols = [f'PaCMAP {i+1} of 5' for i in range(5)]
+    df = pd.DataFrame(embedding, columns=cols, index=data.index)
 
-    return df_2d, df_5d
+    return df

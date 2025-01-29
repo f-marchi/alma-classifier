@@ -19,11 +19,8 @@ def load_models() -> Tuple[Dict[str, Any], Dict[str, Any]]:
     warnings.filterwarnings('ignore')
     model_path = get_model_path()
 
-    # Load PaCMAP models
-    pacmap_models = {
-        '2d': pacmap.load(str(model_path / 'pacmap_2d_model_alma')),
-        '5d': pacmap.load(str(model_path / 'pacmap_5d_model_alma'))
-    }
+    # Load PaCMAP model
+    pacmap_model = pacmap.load(str(model_path / 'pacmap_5d_model_alma'))
 
     # Load LightGBM models
     lgbm_models = {

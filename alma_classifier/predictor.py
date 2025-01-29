@@ -1,3 +1,4 @@
+
 """Main predictor class for ALMA classifier."""
 import numpy as np
 import pandas as pd
@@ -6,7 +7,6 @@ from pathlib import Path
 
 from .models import load_models
 from .preprocessing import process_methylation_data, apply_pacmap
-from .utils import check_lymphoblastic_samples
 
 class ALMAPredictor:
     """
@@ -37,7 +37,7 @@ class ALMAPredictor:
         
         Args:
             data: Methylation beta values as DataFrame or file path
-            sample_type: Optional sample type info for filtering
+            sample_type: Optional sample type info (unused)
             
         Returns:
             DataFrame with predictions and confidence scores
@@ -49,17 +49,7 @@ class ALMAPredictor:
         features = apply_pacmap(methyl_data, self.pacmap_model)
         
         # Generate predictions
-        subtype_preds = self._predict_subtype(features)
-        risk_preds = self._predict_risk(features)
-        
-        # Filter ALL samples from risk prediction
-        if sample_type is not None:
-            risk_preds = check_lymphoblastic_samples(risk_preds, sample_type)
-            
-        # Combine predictions
-        results = pd.concat([subtype_preds, risk_preds], axis=1)
-        
-        return results
+        return self._predict_subtype(features)
     
     def _predict_subtype(self, features: pd.DataFrame) -> pd.DataFrame:
         """Generate epigenetic subtype predictions."""
@@ -79,6 +69,16 @@ class ALMAPredictor:
         max_prob = results[prob_cols].max(axis=1)
         results['AL Epigenomic Subtype'][max_prob < self.confidence_threshold] = np.nan
         results[f'Subtype >{self.confidence_threshold*100}% Confidence'] = max_prob >= self.confidence_threshold
+        
+        # Check for AML or MDS and run risk prediction if found
+        if any('AML' in pred or 'MDS' in pred for pred in preds):
+            risk_results = self._predict_risk(features)
+            results = pd.concat([results, risk_results], axis=1)
+        else:
+            results['AML Epigenomic Risk'] = "AML or MDS not detected"
+            results['P(Remission) at 5y'] = np.nan
+            results['P(Death) at 5y'] = np.nan
+            results[f'Risk >{self.confidence_threshold*100}% Confidence'] = np.nan
         
         return results
     

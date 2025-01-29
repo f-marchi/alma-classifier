@@ -2,9 +2,8 @@
 """Main predictor class for ALMA classifier."""
 import numpy as np
 import pandas as pd
-from typing import Optional, Union, Dict, Any
+from typing import Union
 from pathlib import Path
-
 from .models import load_models
 from .preprocessing import process_methylation_data, apply_pacmap
 
@@ -29,15 +28,13 @@ class ALMAPredictor:
         
     def predict(
         self,
-        data: Union[pd.DataFrame, str, Path],
-        sample_type: Optional[str] = None
-    ) -> pd.DataFrame:
+        data: Union[pd.DataFrame, str, Path]):
+        
         """
         Generate predictions for new samples.
         
         Args:
             data: Methylation beta values as DataFrame or file path
-            sample_type: Optional sample type info (unused)
             
         Returns:
             DataFrame with predictions and confidence scores

@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "alma-classifier"
+version = "0.1.0"
+description = "A Python package for applying pre-trained epigenomic classification models"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+dependencies = [
+    "pandas~=2.0.3",
+    "numpy~=1.24.4",
+    "scikit-learn~=1.2.2",
+    "lightgbm~=3.3.5",
+    "joblib~=1.3.2",
+    "openpyxl>=3.0.0",
+    "setuptools>=75.3.0",
+    "pacmap~=0.7.0",
+]
+
+[project.scripts]
+alma-classifier = "alma_classifier.cli:main"
+
+[tool.setuptools]
+packages = ["alma_classifier"]

@@ -1,0 +1,30 @@
+Metadata-Version: 2.2
+Name: alma-classifier
+Version: 0.1.0
+Summary: A Python package for applying pre-trained epigenomic classification models
+Home-page: https://github.com/yourusername/alma-classifier
+Author: Your Name
+License: MIT
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: pandas~=2.0.3
+Requires-Dist: numpy~=1.24.4
+Requires-Dist: scikit-learn~=1.2.2
+Requires-Dist: lightgbm~=3.3.5
+Requires-Dist: joblib~=1.3.2
+Requires-Dist: openpyxl>=3.0.0
+Requires-Dist: setuptools>=75.3.0
+Requires-Dist: pacmap~=0.7.0
+Dynamic: author
+Dynamic: home-page
+Dynamic: requires-python
+
+# ALMA Classifier
+
+A Python package for applying pre-trained epigenomic classification models to methylation data. This package provides two main predictive models:
+
+1. **AL Epigenomic Subtype**: Predicts 28 subtypes/classes (27 WHO 2022 subtypes of acute leukemia + otherwise-normal control).
+2. **AML Epigenomic Risk**: Predicts the probability of death within 5 years for AML patients.
+
+## Installation
+

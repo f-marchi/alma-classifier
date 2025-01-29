@@ -2,9 +2,9 @@ Metadata-Version: 2.1
 Name: alma-classifier
 Version: 0.1.0
 Summary: A Python package for applying pre-trained epigenomic classification models
-Home-page: https://github.com/yourusername/alma-classifier
+Home-page: https://github.com/f-marchi/alma-classifier
 Author: Your Name
-License: MIT
+License: GPL v3
 Requires-Python: >=3.8
 Description-Content-Type: text/markdown
 Requires-Dist: pandas~=2.0.3

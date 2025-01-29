@@ -35,3 +35,6 @@ htmlcov/
 *.tmp
 .DS_Store
 Thumbs.db
+
+# Models 
+models/

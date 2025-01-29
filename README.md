@@ -14,8 +14,8 @@ pip install pacmap~=0.7.0
 # Then install alma-classifier
 pip install alma-classifier
 
-# Download pre-trained models
-# [Instructions for downloading model files will be provided separately]
+# Download model files (required)
+python -m alma_classifier.download_models
 ```
 
 ### Requirements
@@ -32,16 +32,21 @@ pip install alma-classifier
 ### Important Notes
 1. The `pacmap` package must be installed separately before installing `alma-classifier` due to its specific system requirements and size. Please ensure you have it installed in your environment.
 
-2. Pre-trained models are required for the package to function. After installation, you need to:
-   - Download the model files (contact authors for access)
-   - Place them in the appropriate directory:
-     ```
-     alma_classifier/models/
-     ├── pacmap_2d_model_alma
-     ├── pacmap_5d_model_alma
-     ├── lgbm_dx_model.pkl
-     └── lgbm_px_model.pkl
-     ```
+2. Pre-trained models are required for the package to function. You can download them automatically using:
+   ```bash
+   python -m alma_classifier.download_models
+   ```
+   This will download and place the model files in the correct directory structure:
+   ```
+   alma_classifier/models/
+   ├── imputer_model.joblib
+   ├── lgbm_dx_model.pkl
+   ├── lgbm_px_model.pkl
+   ├── pacmap_2d_model_alma.ann
+   ├── pacmap_2d_model_alma.pkl
+   ├── pacmap_5d_model_alma.ann
+   └── pacmap_5d_model_alma.pkl
+   ```
 
 ## Usage
 
@@ -103,9 +108,3 @@ If you use this package in your research, please cite:
 ## License
 
 [License information to be added]
-
-## Model Access
-
-The pre-trained models required for this package are not included in the PyPI distribution due to size limitations. To obtain access to the models, please contact the authors. 
-
-Once you have the model files, place them in the `alma_classifier/models/` directory of your installation.

@@ -28,7 +28,7 @@ def load_models() -> Tuple[Dict[str, Any], Dict[str, Any]]:
         'risk': joblib.load(str(model_path / 'lgbm_px_model.pkl'))
     }
 
-    return pacmap_models, lgbm_models
+    return pacmap_model, lgbm_models
 
 def validate_models() -> bool:
     """
@@ -39,7 +39,6 @@ def validate_models() -> bool:
     """
     model_path = get_model_path()
     required_files = [
-        'pacmap_2d_model_alma',
         'pacmap_5d_model_alma',
         'lgbm_dx_model.pkl',
         'lgbm_px_model.pkl'

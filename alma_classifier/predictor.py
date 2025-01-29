@@ -24,7 +24,7 @@ class ALMAPredictor:
         Args:
             confidence_threshold: Minimum probability threshold for predictions
         """
-        self.pacmap_models, self.lgbm_models = load_models()
+        self.pacmap_model, self.lgbm_models = load_models()
         self.confidence_threshold = confidence_threshold
         
     def predict(

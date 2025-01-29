@@ -8,8 +8,15 @@ A Python package for applying pre-trained epigenomic classification models to me
 ## Installation
 
 ```bash
-# First install pacmap (required)
-pip install pacmap~=0.7.0
+# first make sure you are running python3.8
+python --version
+
+# create a virtual env
+python -m venv .venv
+source .venv/bin/activate
+
+# install pacmap==0.7.0 (required)
+pip install pacmap==0.7.0
 
 # Then install alma-classifier
 pip install alma-classifier
@@ -26,7 +33,7 @@ python -m alma_classifier.download_models
   - numpy ~= 1.24.4
   - scikit-learn ~= 1.2.2
   - lightgbm ~= 3.3.5
-  - pacmap ~= 0.7.0 (must be installed separately)
+  - pacmap == 0.7.0 (must be installed separately)
   - joblib ~= 1.3.2
 
 ### Important Notes
@@ -42,8 +49,6 @@ python -m alma_classifier.download_models
    ├── imputer_model.joblib
    ├── lgbm_dx_model.pkl
    ├── lgbm_px_model.pkl
-   ├── pacmap_2d_model_alma.ann
-   ├── pacmap_2d_model_alma.pkl
    ├── pacmap_5d_model_alma.ann
    └── pacmap_5d_model_alma.pkl
    ```
@@ -54,7 +59,7 @@ python -m alma_classifier.download_models
 
 ```bash
 # Basic usage
-alma-classifier --input methylation_data.csv --output predictions.xlsx
+alma-classifier --input path/to/data.pkl --output path/to/predictions.xlsx
 
 # With optional parameters
 alma-classifier --input data.pkl --output results.xlsx --confidence 0.7 --sample-type "AML"
@@ -69,8 +74,8 @@ from alma_classifier import ALMAPredictor
 predictor = ALMAPredictor(confidence_threshold=0.5)
 
 # Load your methylation data
-# Supported formats: .pkl, .csv, .xlsx
-data_path = "methylation_data.csv"
+# Supported formats: .pkl
+data_path = "methylation_data.pkl"
 
 # Generate predictions
 results = predictor.predict(
@@ -103,8 +108,11 @@ The predictor returns a DataFrame with the following columns:
 ## Citation
 
 If you use this package in your research, please cite:
-[Citation information to be added]
+
+```
+Francisco Marchi, Marieke Landwehr, Ann-Kathrin Schade et al. Long-read epigenomic diagnosis and prognosis of Acute Myeloid Leukemia, 12 December 2024, PREPRINT (Version 1) available at Research Square [https://doi.org/10.21203/rs.3.rs-5450972/v1]
+```
 
 ## License
 
-[License information to be added]
+See license file.

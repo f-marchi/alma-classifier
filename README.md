@@ -65,28 +65,6 @@ alma-classifier --input path/to/data.pkl --output path/to/predictions.xlsx
 alma-classifier --input data.pkl --output results.xlsx --confidence 0.7 --sample-type "AML"
 ```
 
-### Python API
-
-```python
-from alma_classifier import ALMAPredictor
-
-# Initialize predictor
-predictor = ALMAPredictor(confidence_threshold=0.5)
-
-# Load your methylation data
-# Supported formats: .pkl
-data_path = "methylation_data.pkl"
-
-# Generate predictions
-results = predictor.predict(
-    data=data_path,
-    sample_type="AML"  # Optional sample type info
-)
-
-# Export results
-results.to_excel("alma_predictions.xlsx")
-```
-
 ## Input Data Format
 
 The input data should be a matrix of methylation beta values with:

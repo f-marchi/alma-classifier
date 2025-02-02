@@ -1,8 +1,26 @@
+
 """Data preprocessing utilities."""
 import numpy as np
 import pandas as pd
+import gzip
+import joblib
 from typing import Tuple, Union, Optional, Any
 from pathlib import Path
+
+def read_feature_reference(ref_path: Union[str, Path]) -> pd.Series:
+    """Read feature reference file and return CpG names."""
+    with gzip.open(ref_path, 'rt') as f:
+        ref_df = pd.read_csv(f, sep='\t', header=None, usecols=[3], names=['cpg_name'])
+    return ref_df['cpg_name']
+
+def load_model_and_impute(df: pd.DataFrame, model_path: Union[str, Path]) -> pd.DataFrame:
+    """Load imputer model and impute missing features."""
+    loaded_imputer = joblib.load(model_path)
+    imputer_features = loaded_imputer.feature_names_in_
+    df_aligned = df.T.reindex(columns=imputer_features)
+    imputed_data = loaded_imputer.transform(df_aligned)
+    imputed_df = pd.DataFrame(imputed_data, columns=imputer_features, index=df_aligned.index).T
+    return imputed_df.round(3).astype('float32')
 
 def process_methylation_data(
     data: Union[pd.DataFrame, str, Path],
@@ -35,15 +53,21 @@ def process_methylation_data(
     if df.empty:
         raise ValueError("Empty dataset provided")
     
-    # Use provided columns or all numeric columns
-    if columns is not None:
-        missing_cols = set(columns) - set(df.columns)
-        if missing_cols:
-            raise ValueError(f"Missing required columns: {missing_cols}")
-        df = df[columns]
-    else:
-        df = df.select_dtypes(include=[np.number])
-
+    # Get reference features
+    ref_path = Path(__file__).parent / "data" / "feature_reference.bed.gz"
+    reference_features = read_feature_reference(ref_path)
+    
+    # Filter to only keep features present in reference
+    common_features = df.columns.intersection(reference_features)
+    if len(common_features) == 0:
+        raise ValueError("No matching features found between input data and reference")
+    df = df[common_features]
+    
+    # Impute missing features if needed
+    if len(common_features) < len(reference_features):
+        model_path = Path(__file__).parent / "models" / "imputer_model.joblib"
+        df = load_model_and_impute(df, model_path)
+    
     # Validate beta values
     if df.min().min() < 0 or df.max().max() > 1:
         raise ValueError("Beta values must be between 0 and 1")

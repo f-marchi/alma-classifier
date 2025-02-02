@@ -16,9 +16,9 @@ def load_model_and_impute(df: pd.DataFrame, model_path: Union[str, Path]) -> pd.
     """Load imputer model and impute missing features."""
     loaded_imputer = joblib.load(model_path)
     imputer_features = loaded_imputer.feature_names_in_
-    df_aligned = df.T.reindex(columns=imputer_features)
+    df_aligned = df.reindex(columns=imputer_features)
     imputed_data = loaded_imputer.transform(df_aligned)
-    imputed_df = pd.DataFrame(imputed_data, columns=imputer_features, index=df_aligned.index).T
+    imputed_df = pd.DataFrame(imputed_data, columns=imputer_features, index=df_aligned.index)
     return imputed_df.round(3).astype('float32')
 
 def process_methylation_data(

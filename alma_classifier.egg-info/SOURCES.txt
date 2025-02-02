@@ -1,3 +1,4 @@
+.gitignore
 .replit
 README.md
 generated-icon.png
@@ -18,13 +19,4 @@ alma_classifier.egg-info/dependency_links.txt
 alma_classifier.egg-info/entry_points.txt
 alma_classifier.egg-info/requires.txt
 alma_classifier.egg-info/top_level.txt
-alma_classifier/models/__init__.py
-alma_classifier/models/models.py
-attached_assets/README.md
-attached_assets/imputer_model.joblib
-attached_assets/lgbm_dx_model.pkl
-attached_assets/lgbm_px_model.pkl
-attached_assets/models.py
-attached_assets/predictor.py
-attached_assets/preprocessing.py
-attached_assets/utils.py
+alma_classifier/data/feature_reference.bed.gz

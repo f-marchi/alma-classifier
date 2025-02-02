@@ -9,8 +9,7 @@ from pathlib import Path
 
 def read_feature_reference(ref_path: Union[str, Path]) -> pd.Series:
     """Read feature reference file and return CpG names."""
-    with gzip.open(ref_path, 'rt') as f:
-        ref_df = pd.read_csv(f, sep='\t', header=None, usecols=[3], names=['cpg_name'])
+    ref_df = pd.read_csv(ref_path, sep='\t', header=None, usecols=[3], names=['cpg_name'])
     return ref_df['cpg_name']
 
 def load_model_and_impute(df: pd.DataFrame, model_path: Union[str, Path]) -> pd.DataFrame:
@@ -54,7 +53,7 @@ def process_methylation_data(
         raise ValueError("Empty dataset provided")
     
     # Get reference features
-    ref_path = Path(__file__).parent / "data" / "feature_reference.bed.gz"
+    ref_path = Path(__file__).parent / "data" / "pacmap_reference.bed"
     reference_features = read_feature_reference(ref_path)
     
     # Filter to only keep features present in reference

@@ -38,3 +38,6 @@ Thumbs.db
 
 # Models 
 models/
+
+# Attached assets
+attached_assets/

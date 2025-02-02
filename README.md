@@ -25,17 +25,6 @@ pip install alma-classifier
 python -m alma_classifier.download_models
 ```
 
-### Requirements
-
-- Python 3.8
-- Dependencies:
-  - pandas ~= 2.0.3
-  - numpy ~= 1.24.4
-  - scikit-learn ~= 1.2.2
-  - lightgbm ~= 3.3.5
-  - pacmap == 0.7.0 (must be installed separately)
-  - joblib ~= 1.3.2
-
 ### Important Notes
 1. The `pacmap` package must be installed separately before installing `alma-classifier` due to its specific system requirements and size. Please ensure you have it installed in your environment.
 
@@ -60,9 +49,6 @@ python -m alma_classifier.download_models
 ```bash
 # Basic usage
 alma-classifier --input path/to/data.pkl --output path/to/predictions.xlsx
-
-# With optional parameters
-alma-classifier --input data.pkl --output results.xlsx --confidence 0.7 --sample-type "AML"
 ```
 
 ## Input Data Format
@@ -76,9 +62,7 @@ The input data should be a matrix of methylation beta values with:
 
 If you use this package in your research, please cite:
 
-```
 Francisco Marchi, Marieke Landwehr, Ann-Kathrin Schade et al. Long-read epigenomic diagnosis and prognosis of Acute Myeloid Leukemia, 12 December 2024, PREPRINT (Version 1) available at Research Square [https://doi.org/10.21203/rs.3.rs-5450972/v1]
-```
 
 ## License
 

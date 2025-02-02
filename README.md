@@ -26,21 +26,9 @@ python -m alma_classifier.download_models
 ```
 
 ### Important Notes
-1. The `pacmap` package must be installed separately before installing `alma-classifier` due to its specific system requirements and size. Please ensure you have it installed in your environment.
-
-2. Pre-trained models are required for the package to function. You can download them automatically using:
-   ```bash
-   python -m alma_classifier.download_models
-   ```
-   This will download and place the model files in the correct directory structure:
-   ```
-   alma_classifier/models/
-   ├── imputer_model.joblib
-   ├── lgbm_dx_model.pkl
-   ├── lgbm_px_model.pkl
-   ├── pacmap_5d_model_alma.ann
-   └── pacmap_5d_model_alma.pkl
-   ```
+1. This is a pre-release research tool. Initial versions will be picky and annoying to deal with. Future versions will be flexible and easy to use.
+2. Our diagnostic model currently does not know about important cases, which we really need training data for: AML with Down Syndrome, juvenile myelomonocytic leukemia, transient abnormal myelopoiesis, bone marrow failures, low-risk MDS, lymphomas, and others.
+3. Our prognostic models are currently only limited to AML cases.
 
 ## Usage
 

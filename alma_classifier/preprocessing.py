@@ -62,10 +62,9 @@ def process_methylation_data(
         raise ValueError("No matching features found between input data and reference")
     df = df[common_features]
     
-    # Impute missing features if needed
-    if len(common_features) < len(reference_features):
-        model_path = Path(__file__).parent / "models" / "imputer_model.joblib"
-        df = load_model_and_impute(df, model_path)
+    # Load imputer model and handle missing values
+    model_path = Path(__file__).parent / "models" / "imputer_model.joblib"
+    df = load_model_and_impute(df, model_path)
     
     # Validate beta values
     if df.min().min() < 0 or df.max().max() > 1:

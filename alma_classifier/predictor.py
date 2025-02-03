@@ -101,9 +101,20 @@ class ALMAPredictor:
                                   for i, pred in enumerate(preds)])
         results['P(Predicted Subtype)'] = predicted_probs
         
-        # Add confidence indicator
-        results['ALMA Subtype'][predicted_probs < self.confidence_threshold] = np.nan
-        results[f'Subtype >{self.confidence_threshold*100}% Confidence'] = predicted_probs >= self.confidence_threshold
+        # Replace low confidence predictions with "Not confident"
+        results.loc[predicted_probs < self.confidence_threshold, 'ALMA Subtype'] = "Not confident"
+        
+        # Add second most probable subtype for predictions between 0.5 and 0.8
+        second_best_mask = (predicted_probs >= 0.5) & (predicted_probs < 0.8)
+        results['Other potential subtype'] = np.nan
+        results['P(other potential subtype)'] = np.nan
+        
+        for i in range(len(features)):
+            if second_best_mask[i]:
+                sorted_indices = np.argsort(probs[i])[::-1]
+                second_best_class = self.lgbm_models['subtype'].classes_[sorted_indices[1]]
+                results.loc[features.index[i], 'Other potential subtype'] = second_best_class
+                results.loc[features.index[i], 'P(other potential subtype)'] = probs[i][sorted_indices[1]]
         
         return results
     
@@ -124,9 +135,8 @@ class ALMAPredictor:
         # Add only P(Death) probability
         results['P(Death) at 5y'] = probs[:,1]
         
-        # Add confidence indicator
+        # Replace low confidence predictions with "Not confident"
         max_prob = np.max(probs, axis=1)
-        results['AML Epigenomic Risk'][max_prob < self.confidence_threshold] = np.nan
-        results[f'Risk >{self.confidence_threshold*100}% Confidence'] = max_prob >= self.confidence_threshold
+        results.loc[max_prob < self.confidence_threshold, 'AML Epigenomic Risk'] = "Not confident"
         
         return results

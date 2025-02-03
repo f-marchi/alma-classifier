@@ -4,8 +4,8 @@
 A Python package for applying pre-trained epigenomic classification models to methylation data. This package provides three main predictive models:
 
 1. **ALMA Subtype**: Predicts 28 subtypes/classes (27 WHO 2022 subtypes of acute leukemia + otherwise-normal control).
-2. **AML Epigenomic Risk**: Predicts the probability of death within 5 years for AML patients.
-3. **38CpG AML Signature**: A 38-CpG prognostic signature for AML that stratifies patients into high and low-risk groups.
+2. **AML Epigenomic Risk**: Predicts the probability of death within 5 years for AML patients using ALMA.
+3. **38CpG AML Signature**: Predicts same as above, but using a targeted panel of 38 CpGs.
 
 ## Installation
 
@@ -28,6 +28,7 @@ python -m alma_classifier.download_models
 ```
 
 ### Important Notes
+
 1. This is a pre-release research tool. Initial versions will be picky and annoying to deal with. Future versions will be flexible and easy to use.
 2. Our diagnostic model currently does not know about important cases, which we really need training data for: AML with Down Syndrome, juvenile myelomonocytic leukemia, transient abnormal myelopoiesis, bone marrow failures, low-risk MDS, lymphomas, and others.
 3. Our prognostic models (AML Epigenomic Risk and 38CpG AML Signature) are currently only limited to AML cases.
@@ -37,7 +38,6 @@ python -m alma_classifier.download_models
 ### Command Line Interface
 
 ```bash
-# Basic usage
 alma-classifier --input path/to/data.pkl --output path/to/predictions.xlsx
 ```
 
@@ -56,26 +56,17 @@ The package generates predictions with the following behavior:
    - Outputs the predicted subtype and its probability
    - If confidence is below threshold (default 0.5), outputs "Not confident"
    - For predictions with confidence between 0.5-0.8, also outputs the second most likely subtype and its probability
-   - All probabilities are rounded to 3 decimal places
 
 2. **AML Epigenomic Risk** (only for AML/MDS samples):
    - Outputs "High" or "Low" risk prediction
    - Includes P(Death) at 5y probability
    - Outputs "Not confident" if prediction confidence is below threshold
    - Non-AML/MDS samples receive "NaN" values
-   - All probabilities are rounded to 3 decimal places
 
 3. **38CpG AML Signature** (only for AML/MDS samples):
    - Outputs continuous hazard score (38CpG-HazardScore)
    - Provides binary risk stratification (38CpG-AMLsignature: High/Low)
    - Non-AML/MDS samples receive "NaN" values
-   - Scores are rounded to 3 decimal places
-
-The model will not generate predictions when:
-- Input data is missing required CpG sites
-- Sample quality doesn't meet minimum requirements
-- Risk predictions are requested for non-AML/MDS samples
-- Confidence threshold is not met (outputs "Not confident" instead)
 
 ## Citation
 

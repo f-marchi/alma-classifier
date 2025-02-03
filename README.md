@@ -48,14 +48,34 @@ The input data should be a matrix of methylation beta values with:
 - Columns representing CpG sites
 - Values between 0 and 1
 
-## Model Outputs
+## Model Outputs and Prediction Behavior
 
-The package generates predictions for:
-1. ALMA Subtype classification with confidence scores
-2. AML Epigenomic Risk prediction (for AML/MDS samples)
-3. 38CpG AML signature scores including:
-   - Continuous hazard score (38CpG-HazardScore)
-   - Binary risk stratification (38CpG-AMLsignature: High/Low)
+The package generates predictions with the following behavior:
+
+1. **ALMA Subtype Classification**:
+   - Outputs the predicted subtype and its probability
+   - If confidence is below threshold (default 0.5), outputs "Not confident"
+   - For predictions with confidence between 0.5-0.8, also outputs the second most likely subtype and its probability
+   - All probabilities are rounded to 3 decimal places
+
+2. **AML Epigenomic Risk** (only for AML/MDS samples):
+   - Outputs "High" or "Low" risk prediction
+   - Includes P(Death) at 5y probability
+   - Outputs "Not confident" if prediction confidence is below threshold
+   - Non-AML/MDS samples receive "NaN" values
+   - All probabilities are rounded to 3 decimal places
+
+3. **38CpG AML Signature** (only for AML/MDS samples):
+   - Outputs continuous hazard score (38CpG-HazardScore)
+   - Provides binary risk stratification (38CpG-AMLsignature: High/Low)
+   - Non-AML/MDS samples receive "NaN" values
+   - Scores are rounded to 3 decimal places
+
+The model will not generate predictions when:
+- Input data is missing required CpG sites
+- Sample quality doesn't meet minimum requirements
+- Risk predictions are requested for non-AML/MDS samples
+- Confidence threshold is not met (outputs "Not confident" instead)
 
 ## Citation
 

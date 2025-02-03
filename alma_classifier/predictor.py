@@ -42,6 +42,12 @@ class ALMAPredictor:
         # Process input data
         methyl_data = process_methylation_data(data)
         
+        # Apply PaCMAP dimension reduction
+        features = apply_pacmap(methyl_data, self.pacmap_model)
+        
+        # Generate subtype predictions first
+        subtype_results = self._predict_subtype(features)
+        
         # Initialize empty signature results
         signature_results = pd.DataFrame(index=methyl_data.index)
         signature_columns = ['38CpG-HazardScore', '38CpG-AMLsignature']
@@ -51,16 +57,11 @@ class ALMAPredictor:
         # Generate 38CpG signature predictions if requested, only for AML/MDS samples
         if include_38cpg:
             from .aml_signature import generate_coxph_score
-            # Generate subtype predictions first to identify AML/MDS samples
-            subtype_results = self._predict_subtype(features)
             is_aml_mds = subtype_results['ALMA Subtype'].str.startswith(('AML', 'MDS'), na=False)
             
             if is_aml_mds.any():
                 aml_mds_signatures = generate_coxph_score(methyl_data[is_aml_mds])
                 signature_results.loc[is_aml_mds] = aml_mds_signatures
-        
-        # Apply PaCMAP dimension reduction
-        features = apply_pacmap(methyl_data, self.pacmap_model)
         
         # Generate subtype predictions first
         subtype_results = self._predict_subtype(features)

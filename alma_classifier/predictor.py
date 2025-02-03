@@ -27,18 +27,27 @@ class ALMAPredictor:
         
     def predict(
         self,
-        data: Union[pd.DataFrame, str, Path]) -> pd.DataFrame:
+        data: Union[pd.DataFrame, str, Path],
+        include_38cpg: bool = True) -> pd.DataFrame:
         """
         Generate predictions for new samples.
         
         Args:
             data: Methylation beta values as DataFrame or file path
+            include_38cpg: Whether to include 38CpG AML signature predictions
             
         Returns:
             DataFrame with predictions and confidence scores
         """
         # Process input data
         methyl_data = process_methylation_data(data)
+        
+        # Generate 38CpG signature predictions if requested
+        if include_38cpg:
+            from .aml_signature import generate_coxph_score
+            signature_results = generate_coxph_score(methyl_data)
+        else:
+            signature_results = pd.DataFrame(index=methyl_data.index)
         
         # Apply PaCMAP dimension reduction
         features = apply_pacmap(methyl_data, self.pacmap_model)
@@ -63,8 +72,8 @@ class ALMAPredictor:
             # Update only the rows that have AML/MDS predictions
             risk_results.loc[is_aml_mds] = risk_predictions
             
-        # Combine results
-        return pd.concat([subtype_results, risk_results], axis=1)
+        # Combine all results
+        return pd.concat([subtype_results, risk_results, signature_results], axis=1)
     
     def _predict_subtype(self, features: pd.DataFrame) -> pd.DataFrame:
         """Generate epigenetic subtype predictions."""

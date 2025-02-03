@@ -70,7 +70,7 @@ class ALMAPredictor:
         risk_results = pd.DataFrame(index=features.index)
         
         # Add risk prediction columns with NaN values
-        risk_columns = ['AML Epigenomic Risk', 'P(Death) at 5y', f'Risk >{self.confidence_threshold*100}% Confidence']
+        risk_columns = ['AML Epigenomic Risk', 'P(Death) at 5y']
         for col in risk_columns:
             risk_results[col] = np.nan
         

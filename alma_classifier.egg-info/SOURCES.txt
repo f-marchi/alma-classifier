@@ -1,5 +1,6 @@
 .gitignore
 .replit
+LICENSE.txt
 README.md
 generated-icon.png
 pyproject.toml
@@ -7,6 +8,7 @@ replit.nix
 setup.py
 uv.lock
 alma_classifier/__init__.py
+alma_classifier/aml_signature.py
 alma_classifier/cli.py
 alma_classifier/download_models.py
 alma_classifier/models.py
@@ -19,4 +21,4 @@ alma_classifier.egg-info/dependency_links.txt
 alma_classifier.egg-info/entry_points.txt
 alma_classifier.egg-info/requires.txt
 alma_classifier.egg-info/top_level.txt
-alma_classifier/data/feature_reference.bed.gz
+alma_classifier/data/pacmap_reference.bed

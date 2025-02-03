@@ -2,11 +2,17 @@ Metadata-Version: 2.1
 Name: alma-classifier
 Version: 0.1.0
 Summary: A Python package for applying pre-trained epigenomic classification models
-Home-page: https://github.com/yourusername/alma-classifier
-Author: Your Name
-License: MIT
-Requires-Python: >=3.8
+Home-page: https://https://github.com/f-marchi/ALMA-classifier
+Author: Francisco Marchi
+Author-email: fmarchi500@gmail.com
+License: GPL-3.0
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: OS Independent
+Requires-Python: ==3.8
 Description-Content-Type: text/markdown
+License-File: LICENSE.txt
 Requires-Dist: pandas~=2.0.3
 Requires-Dist: numpy~=1.24.4
 Requires-Dist: scikit-learn~=1.2.2
@@ -14,14 +20,15 @@ Requires-Dist: lightgbm~=3.3.5
 Requires-Dist: joblib~=1.3.2
 Requires-Dist: openpyxl>=3.0.0
 Requires-Dist: setuptools>=75.3.0
-Requires-Dist: pacmap~=0.7.0
+
 
 # ALMA Classifier
 
-A Python package for applying pre-trained epigenomic classification models to methylation data. This package provides two main predictive models:
+A Python package for applying pre-trained epigenomic classification models to methylation data. This package provides three main predictive models:
 
 1. **ALMA Subtype**: Predicts 28 subtypes/classes (27 WHO 2022 subtypes of acute leukemia + otherwise-normal control).
-2. **AML Epigenomic Risk**: Predicts the probability of death within 5 years for AML patients.
+2. **AML Epigenomic Risk**: Predicts the probability of death within 5 years for AML patients using ALMA.
+3. **38CpG AML Signature**: Predicts same as above, but using a targeted panel of 38 CpGs.
 
 ## Installation
 
@@ -44,28 +51,16 @@ python -m alma_classifier.download_models
 ```
 
 ### Important Notes
-1. The `pacmap` package must be installed separately before installing `alma-classifier` due to its specific system requirements and size. Please ensure you have it installed in your environment.
 
-2. Pre-trained models are required for the package to function. You can download them automatically using:
-   ```bash
-   python -m alma_classifier.download_models
-   ```
-   This will download and place the model files in the correct directory structure:
-   ```
-   alma_classifier/models/
-   ├── imputer_model.joblib
-   ├── lgbm_dx_model.pkl
-   ├── lgbm_px_model.pkl
-   ├── pacmap_5d_model_alma.ann
-   └── pacmap_5d_model_alma.pkl
-   ```
+1. This is a pre-release research tool. Initial versions will be picky and annoying to deal with. Future versions will be flexible and easy to use.
+2. Our diagnostic model currently does not know about important cases, which we really need training data for: AML with Down Syndrome, juvenile myelomonocytic leukemia, transient abnormal myelopoiesis, bone marrow failures, low-risk MDS, lymphomas, and others.
+3. Our prognostic models (AML Epigenomic Risk and 38CpG AML Signature) are currently only limited to AML cases.
 
 ## Usage
 
 ### Command Line Interface
 
 ```bash
-# Basic usage
 alma-classifier --input path/to/data.pkl --output path/to/predictions.xlsx
 ```
 
@@ -75,6 +70,26 @@ The input data should be a matrix of methylation beta values with:
 - Rows representing samples
 - Columns representing CpG sites
 - Values between 0 and 1
+
+## Model Outputs and Prediction Behavior
+
+The package generates predictions with the following behavior:
+
+1. **ALMA Subtype Classification**:
+   - Outputs the predicted subtype and its probability
+   - If confidence is below threshold (default 0.5), outputs "Not confident"
+   - For predictions with confidence between 0.5-0.8, also outputs the second most likely subtype and its probability
+
+2. **AML Epigenomic Risk** (only for AML/MDS samples):
+   - Outputs "High" or "Low" risk prediction
+   - Includes P(Death) at 5y probability
+   - Outputs "Not confident" if prediction confidence is below threshold
+   - Non-AML/MDS samples receive "NaN" values
+
+3. **38CpG AML Signature** (only for AML/MDS samples):
+   - Outputs continuous hazard score (38CpG-HazardScore)
+   - Provides binary risk stratification (38CpG-AMLsignature: High/Low)
+   - Non-AML/MDS samples receive "NaN" values
 
 ## Citation
 

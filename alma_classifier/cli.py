@@ -35,14 +35,24 @@ def main():
         # Check if pacmap is installed
         try:
             import pacmap
-        except ImportError:
-            print("Error: pacmap package is required but not installed.")
-            print("Please install it using: pip install pacmap==0.7.0")
+            from tqdm import tqdm
+        except ImportError as e:
+            missing_pkg = str(e).split("'")[1]
+            print(f"Error: {missing_pkg} package is required but not installed.")
+            print(f"Please install it using: pip install {missing_pkg}")
+            sys.exit(1)
+            
+        # Validate models
+        models_valid, error_msg = validate_models()
+        if not models_valid:
+            print("Error: Missing model files")
+            print(error_msg)
             sys.exit(1)
             
         # Initialize predictor
         predictor = ALMAPredictor(confidence_threshold=args.confidence)
         
+        print("Starting prediction process...")
         # Generate predictions
         results = predictor.predict(
             data=args.input,

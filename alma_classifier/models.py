@@ -30,12 +30,12 @@ def load_models() -> Tuple[Dict[str, Any], Dict[str, Any]]:
 
     return pacmap_model, lgbm_models
 
-def validate_models() -> bool:
+def validate_models() -> Tuple[bool, str]:
     """
     Validate that all required model files exist.
     
     Returns:
-        bool: True if all models exist, False otherwise
+        Tuple[bool, str]: (True if all models exist, error message if any)
     """
     model_path = get_model_path()
     required_files = [
@@ -44,7 +44,16 @@ def validate_models() -> bool:
         'lgbm_px_model.pkl'
     ]
     
+    missing_files = []
     for file in required_files:
         if not (model_path / file).exists():
-            return False
-    return True
+            missing_files.append(file)
+            
+    if missing_files:
+        msg = (
+            f"Missing model files: {', '.join(missing_files)}.\n"
+            "Please run 'python -m alma_classifier.download_models' "
+            "to download required models."
+        )
+        return False, msg
+    return True, ""

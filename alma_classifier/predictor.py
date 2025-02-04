@@ -6,9 +6,6 @@ from pathlib import Path
 from .models import load_models
 from .preprocessing import process_methylation_data, apply_pacmap
 
-import functools
-from tqdm import tqdm
-
 class ALMAPredictor:
     """
     ALMA (Acute Leukemia Methylome Atlas) predictor class.
@@ -17,7 +14,6 @@ class ALMAPredictor:
     - Epigenetic subtype classification
     - AML risk stratification for AML/MDS samples only
     """
-    _cache = {}
     
     def __init__(self, confidence_threshold: float = 0.5):
         """
@@ -29,7 +25,6 @@ class ALMAPredictor:
         self.pacmap_model, self.lgbm_models = load_models()
         self.confidence_threshold = confidence_threshold
         
-    @functools.lru_cache(maxsize=32)
     def predict(
         self,
         data: Union[pd.DataFrame, str, Path],

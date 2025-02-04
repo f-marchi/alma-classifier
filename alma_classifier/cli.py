@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 from .predictor import ALMAPredictor
 from .utils import export_results
+from .models import validate_models
 
 def main():
     """Execute ALMA classifier from command line."""
@@ -35,7 +36,6 @@ def main():
         # Check if pacmap is installed
         try:
             import pacmap
-            from tqdm import tqdm
         except ImportError as e:
             missing_pkg = str(e).split("'")[1]
             print(f"Error: {missing_pkg} package is required but not installed.")

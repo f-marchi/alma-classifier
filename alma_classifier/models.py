@@ -39,7 +39,8 @@ def validate_models() -> Tuple[bool, str]:
     """
     model_path = get_model_path()
     required_files = [
-        'pacmap_5d_model_alma',
+        'pacmap_5d_model_alma.pkl',
+        'pacmap_5d_model_alma.ann',
         'lgbm_dx_model.pkl',
         'lgbm_px_model.pkl'
     ]

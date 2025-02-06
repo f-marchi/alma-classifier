@@ -12,6 +12,11 @@ def main():
         description="ALMA Classifier - Epigenomic classification for methylation data"
     )
     parser.add_argument(
+        "--demo",
+        action="store_true",
+        help="Run classifier on example dataset"
+    )
+    parser.add_argument(
         "--input",
         required=True,
         type=str,
@@ -33,6 +38,14 @@ def main():
     args = parser.parse_args()
     
     try:
+        if args.demo:
+            from pathlib import Path
+            args.input = str(Path(__file__).parent / "data" / "example_dataset.pkl")
+            if not args.output:
+                args.output = "example_predictions.xlsx"
+            print(f"Running demo with example dataset: {args.input}")
+            print(f"Results will be saved to: {args.output}")
+
         # Check if pacmap is installed
         try:
             import pacmap

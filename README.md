@@ -38,7 +38,11 @@ python -m alma_classifier.download_models
 ### Command Line Interface
 
 ```bash
+# Run with your own data
 alma-classifier --input path/to/data.pkl --output path/to/predictions.xlsx
+
+# Try the demo with example dataset
+alma-classifier --demo --output predictions.xlsx
 ```
 
 ## Input Data Format

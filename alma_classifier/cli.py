@@ -18,7 +18,7 @@ def main():
     )
     parser.add_argument(
         "--input",
-        required=True,
+        required=False,
         type=str,
         help="Path to input methylation data file (.pkl, .csv, or .xlsx)"
     )
@@ -38,6 +38,9 @@ def main():
     args = parser.parse_args()
     
     try:
+        if not args.demo and not args.input:
+            parser.error("--input is required when not using --demo")
+            
         if args.demo:
             from pathlib import Path
             args.input = str(Path(__file__).parent / "data" / "example_dataset.pkl")

@@ -39,10 +39,10 @@ def export_results(
                     'Probability score for the predicted subtype (0-1)',
                     'Second most likely subtype (only shown for predictions with 0.5-0.8 confidence)',
                     'Probability score for the second most likely subtype',
-                    'Epigenomic risk classification for AML/MDS samples (High/Low/Not confident)',
+                    'Epigenomic risk classification for AML/MDS samples (High/Low)',
                     'Probability of death within 5 years for AML patients',
-                    'Continuous risk score based on 38 CpG signature (AML only)',
-                    'Binary risk classification based on 38 CpG signature (High/Low, AML only)'
+                    'Continuous risk score based on 38 CpG signature (AML/MDS only)',
+                    'Binary risk classification based on 38 CpG signature (High/Low)'
                 ]
             })
             guide.to_excel(writer, sheet_name='Guide', index=False)

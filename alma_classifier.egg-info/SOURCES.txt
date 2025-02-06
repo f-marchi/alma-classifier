@@ -1,5 +1,6 @@
 .gitignore
 .replit
+CHANGELOG.md
 LICENSE.txt
 README.md
 generated-icon.png
@@ -21,4 +22,5 @@ alma_classifier.egg-info/dependency_links.txt
 alma_classifier.egg-info/entry_points.txt
 alma_classifier.egg-info/requires.txt
 alma_classifier.egg-info/top_level.txt
+alma_classifier/data/example_dataset.pkl
 alma_classifier/data/pacmap_reference.bed

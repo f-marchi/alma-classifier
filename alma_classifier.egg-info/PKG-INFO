@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: alma-classifier
-Version: 0.1.0
+Version: 0.1.1
 Summary: A Python package for applying pre-trained epigenomic classification models
 Home-page: https://https://github.com/f-marchi/ALMA-classifier
 Author: Francisco Marchi
@@ -61,7 +61,11 @@ python -m alma_classifier.download_models
 ### Command Line Interface
 
 ```bash
+# Run with your own data
 alma-classifier --input path/to/data.pkl --output path/to/predictions.xlsx
+
+# Try the demo with example dataset
+alma-classifier --demo --output predictions.xlsx
 ```
 
 ## Input Data Format

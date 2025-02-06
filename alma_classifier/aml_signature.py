@@ -5,8 +5,16 @@ import pandas as pd
 import math
 from typing import Dict
 
-def beta2m(val: float) -> float:
-    """Transform beta-values into m-values."""
+def beta2m(val: float, epsilon: float = 1e-6) -> float:
+    """
+    Transform beta-values into m-values with robust handling of edge cases.
+    
+    Args:
+        val: Beta value to transform
+        epsilon: Small value to prevent log(0)
+    """
+    # Clamp values to valid range
+    val = max(epsilon, min(1 - epsilon, val))
     return math.log2(val/(1-val))
 
 def get_38cpg_coefficients() -> pd.Series:
@@ -61,7 +69,7 @@ def generate_coxph_score(methyl_data: pd.DataFrame,
     
     # Prepare data
     x = methyl_data.copy()
-    x = x.replace(1, 0.999).replace(0, 0.001)
+    x = x.clip(0, 1)  # Clamp values to [0,1] range
     x = x.apply(np.vectorize(beta2m))
     
     # Calculate coefficients

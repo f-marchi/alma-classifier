@@ -67,8 +67,8 @@ def process_methylation_data(
     df = load_model_and_impute(df, model_path)
     
     # Validate beta values
-    if df.min().min() < 0 or df.max().max() > 1:
-        raise ValueError("Beta values must be between 0 and 1")
+    if df.min().min() < -2 or df.max().max() > 2:
+        raise ValueError("Methylation values exceed expected range [0, 1]. Are you sure these are beta values?")
         
     return df
 

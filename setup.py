@@ -1,9 +1,8 @@
 from setuptools import setup, find_packages
-from alma_classifier import __version__
 
 setup(
     name="alma-classifier",
-    version=__version__,
+    version="0.1.3",
     packages=find_packages(),
     package_data={
         'alma_classifier': ['models/*', 'data/*'],

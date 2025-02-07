@@ -1,8 +1,9 @@
 from setuptools import setup, find_packages
+from alma_classifier import __version__
 
 setup(
     name="alma-classifier",
-    version="0.1.2",
+    version=__version__,
     packages=find_packages(),
     package_data={
         'alma_classifier': ['models/*', 'data/*'],
@@ -13,7 +14,7 @@ setup(
             'alma-classifier=alma_classifier.cli:main',
         ],
     },
-    python_requires='==3.8',
+    python_requires=">=3.8,<=3.10",
     author="Francisco Marchi",
     author_email="fmarchi500@gmail.com",
     description="A Python package for applying pre-trained epigenomic classification models",

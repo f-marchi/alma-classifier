@@ -10,7 +10,7 @@ Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.8
 Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
 Classifier: Operating System :: OS Independent
-Requires-Python: ==3.8
+Requires-Python: >=3.8,<3.10
 Description-Content-Type: text/markdown
 License-File: LICENSE.txt
 Requires-Dist: pandas~=2.0.3

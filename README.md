@@ -20,6 +20,9 @@ source .venv/bin/activate
 # install pacmap==0.7.0 (required)
 pip install pacmap==0.7.0
 
+# MacOS users only: 
+# brew install lightgbm
+
 # Then install alma-classifier
 pip install alma-classifier
 

@@ -4,10 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "alma-classifier"
-dynamic = ["version", "authors", "classifiers"]
+version = "0.1.3"
 description = "A Python package for applying pre-trained epigenomic classification models"
+dynamic = ["authors", "classifiers"]
 readme = "README.md"
-requires-python = ">=3.8,<=3.10"
+requires-python = ">=3.8,<3.10"
 license = {text = "GPL-3.0"}
 dependencies = [
     "pandas~=2.0.3",
@@ -24,6 +25,3 @@ alma-classifier = "alma_classifier.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["alma_classifier*"]
-
-[tool.setuptools.dynamic]
-version = {attr = "alma_classifier.__version__"}

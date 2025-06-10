@@ -21,7 +21,7 @@ def main():
         "--input",
         required=False,
         type=str,
-        help="Path to input methylation data file (.pkl, .csv, or .xlsx)"
+        help="Path to input methylation data file (.pkl, .csv, .bed, or .bed.gz)"
     )
     parser.add_argument(
         "--output",

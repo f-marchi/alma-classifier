@@ -1,4 +1,3 @@
-
 # ALMA Classifier
 
 A Python package for applying pre-trained epigenomic classification models to methylation data. This package provides three main predictive models:
@@ -41,19 +40,39 @@ python -m alma_classifier.download_models
 ### Command Line Interface
 
 ```bash
-# Run with your own data
+# Run with your own data (various formats supported)
 alma-classifier --input path/to/data.pkl --output path/to/predictions.xlsx
+alma-classifier --input path/to/sample.bed.gz --output path/to/predictions.xlsx
 
 # Try the demo with example dataset
 alma-classifier --demo --output predictions.xlsx
 ```
 
-## Input Data Format
+## Input Data Formats
 
-The input data should be a matrix of methylation beta values with:
-- Rows representing samples
-- Columns representing CpG sites
-- Values between 0 and 1
+The package supports multiple input formats:
+
+### 1. Preprocessed Methylation Data
+- **Pickle files** (`.pkl`): Pandas DataFrame with methylation beta values
+- **CSV files** (`.csv`): Comma-separated values with samples as rows, CpGs as columns
+
+### 2. BED Files
+- **BED files** (`.bed`): Standard BED format with methylation data
+- **Compressed BED files** (`.bed.gz`): Gzip-compressed BED files
+
+For all formats:
+- Rows should represent samples
+- Columns should represent CpG sites  
+- Values should be between 0 and 1 (beta values)
+
+### BED File Format
+BED files should follow the standard bedMethyl format with these key columns:
+- Column 1: `chrom` - Chromosome name
+- Column 2: `start_position` - 0-based start position  
+- Column 4: `modified_base_code` - Single letter code for modified base
+- Column 11: `fraction_modified` - Percentage of methylation (0-100)
+
+The package automatically converts BED files to the internal methylation format using the reference CpG mapping.
 
 ## Model Outputs and Prediction Behavior
 

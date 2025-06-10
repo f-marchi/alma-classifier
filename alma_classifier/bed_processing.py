@@ -68,7 +68,6 @@ def process_bed_to_methylation(
         sample_name = bed_file.name.replace('.bed.gz', '').replace('.bed', '')
     
     print(f"Processing BED file: {bed_file.name}")
-    print(f"Sample name: {sample_name}")
     
     # Get reference mapping
     ref_path = Path(__file__).parent / "data" / "pacmap_reference.bed"

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="alma-classifier",
-    version="0.1.3",
+    version="0.1.4",
     packages=find_packages(),
     package_data={
         'alma_classifier': ['models/*', 'data/*'],
@@ -15,11 +15,11 @@ setup(
     },
     python_requires=">=3.8,<=3.10",
     author="Francisco Marchi",
-    author_email="fmarchi500@gmail.com",
+    author_email="flourenco@ufl.edu",
     description="A Python package for applying pre-trained epigenomic classification models",
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
-    url="https://https://github.com/f-marchi/ALMA-classifier",
+    url="https://github.com/f-marchi/ALMA-classifier",
     classifiers=[
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.8",

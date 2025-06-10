@@ -1,2 +1,0 @@
-[console_scripts]
-alma-classifier = alma_classifier.cli:main

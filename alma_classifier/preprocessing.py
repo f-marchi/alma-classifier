@@ -1,9 +1,9 @@
-
 """Data preprocessing utilities."""
 import numpy as np
 import pandas as pd
 import gzip
 import joblib
+import warnings
 from typing import Tuple, Union, Optional, Any
 from pathlib import Path
 
@@ -21,6 +21,25 @@ def load_model_and_impute(df: pd.DataFrame, model_path: Union[str, Path]) -> pd.
     imputed_df = pd.DataFrame(imputed_data, columns=imputer_features, index=df_aligned.index)
     return imputed_df.round(3).astype('float32')
 
+def validate_cpg_number(num_cpgs: int) -> None:
+    """Validate CpG number and raise warnings or errors as appropriate."""
+    if num_cpgs < 10000:
+        raise ValueError(
+            f"Insufficient CpG number. {num_cpgs:,} CpGs detected. "
+            "Models rely on Illumina methylation450k reference, so predictions "
+            f"may not be fully accurate with {num_cpgs:,} CpGs. "
+        )
+    elif num_cpgs < 100000:
+        warnings.warn(
+            f"Limited CpG number. {num_cpgs:,} CpGs detected. "
+            "Models rely on Illumina methylation450k reference, so predictions "
+            f"may not be fully accurate with {num_cpgs:,} CpGs. ",
+            UserWarning,
+            stacklevel=3
+        )
+    else:
+        print(f"Good CpG number detected ({num_cpgs:,} CpGs)")
+
 def process_methylation_data(
     data: Union[pd.DataFrame, str, Path],
     columns: Optional[list] = None
@@ -34,6 +53,9 @@ def process_methylation_data(
         
     Returns:
         Processed DataFrame with standard CpG columns
+        
+    Raises:
+        ValueError: If insufficient CpG number or invalid data format
     """
     # Load data if path provided
     if isinstance(data, (str, Path)):
@@ -60,6 +82,10 @@ def process_methylation_data(
     common_features = df.columns.intersection(reference_features)
     if len(common_features) == 0:
         raise ValueError("No matching features found between input data and reference")
+    
+    # Validate CpG number before proceeding
+    validate_cpg_number(len(common_features))
+    
     df = df[common_features]
     
     # Load imputer model and handle missing values

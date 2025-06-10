@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# python package files
+*.egg-info/
+
 # Virtual environment
 .venv/
 env/
@@ -20,6 +23,7 @@ htmlcov/
 .tox/
 .nox/
 .pytest_cache/
+temp.csv
 
 # Jupyter Notebook
 .ipynb_checkpoints/

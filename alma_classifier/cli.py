@@ -1,6 +1,7 @@
 """Command line interface for ALMA classifier."""
 import argparse
 import sys
+import warnings
 from pathlib import Path
 from .predictor import ALMAPredictor
 from .utils import export_results
@@ -69,6 +70,10 @@ def main():
         predictor = ALMAPredictor(confidence_threshold=args.confidence)
         
         print("Starting prediction process...")
+        
+        # Configure warnings to be more visible
+        warnings.simplefilter("always", UserWarning)
+        
         # Generate predictions
         results = predictor.predict(
             data=args.input,
@@ -80,6 +85,10 @@ def main():
         
         print(f"Successfully generated predictions: {args.output}")
         
+    except ValueError as e:
+        # Handle CpG coverage errors and other validation errors
+        print(f"Data validation error: {str(e)}")
+        sys.exit(1)
     except Exception as e:
         print(f"Error: {str(e)}")
         sys.exit(1)

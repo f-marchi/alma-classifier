@@ -1,94 +1,75 @@
 # ALMA Classifier
 
-A Python package for applying pre-trained epigenomic classification models to methylation data. This package provides three main predictive models:
+A Python package for epigenomic diagnosis and prognosis of acute myeloid leukemia.
 
-1. **ALMA Subtype**: Predicts 28 subtypes/classes (27 WHO 2022 subtypes of acute leukemia + otherwise-normal control).
-2. **AML Epigenomic Risk**: Predicts the probability of death within 5 years for AML patients using ALMA.
-3. **38CpG AML Signature**: Predicts same as above, but using a targeted panel of 38 CpGs.
+## Models
+
+1. **ALMA Subtype**: Classifies 28 subtypes (27 WHO 2022 acute leukemia subtypes + normal control)
+2. **AML Epigenomic Risk**: Predicts 5-year mortality probability for AML patients
+3. **38CpG AML Signature**: Risk stratification using targeted 38 CpG panel
 
 ## Installation
 
+### Docker (Recommended)
+
 ```bash
-# first make sure you are running python3.8
-python --version
+docker pull fmarchi/alma-classifier:0.1.4
+```
 
-# create a virtual env
-python -m venv .venv
-source .venv/bin/activate
+### pip
 
-# install pacmap==0.7.0 (required)
+```bash
+python -m venv .venv && source .venv/bin/activate
 pip install pacmap==0.7.0
-
-# MacOS users only: 
-# brew install lightgbm
-
-# Then install alma-classifier
+# MacOS users need `brew install lightgbm`
 pip install alma-classifier
-
-# Download model files (required)
 python -m alma_classifier.download_models
 ```
 
-### Important Note
-
-Our diagnostic model currently does not know about important cases: AML with Down Syndrome, juvenile myelomonocytic leukemia, transient abnormal myelopoiesis, low-risk MDS, lymphomas, and others.
-
 ## Usage
 
-### Command Line Interface
+### Docker
 
 ```bash
-# Run with your own data (various formats supported)
-alma-classifier --input path/to/dataset.pkl --output path/to/predictions.xlsx
-alma-classifier --input path/to/nanopore_sample.bed.gz --output path/to/predictions.csv
+# Demo
+docker run --rm -v $(pwd)/output:/output fmarchi/alma-classifier:0.1.4 --demo --output /output/demo_predictions.xlsx
 
-# Try the demo with example dataset
-alma-classifier --demo --output predictions.xlsx
+# Your data
+## Transfer your input data to ./data/
+docker run --rm -v "$(pwd)/data":/data -v "$(pwd)/output":/output   fmarchi/alma-classifier:0.1.4 --input /data/your_file.pkl --output /output/your_results.xlsx
 ```
 
-## Input Data Formats
+### Command Line
 
-- Rows should represent samples
-- Columns should represent CpG sites  
-- Values should be between 0 and 1 (beta values)
+```bash
+alma-classifier --input data.pkl --output predictions.xlsx
+alma-classifier --demo --output demo_results.csv
+alma-classifier --input data.pkl --output results.xlsx --confidence 0.5
+```
 
-### BED File Format
+## Input Formats
 
-BED files from nanopore WGS should follow the standard bedMethyl format with these key columns:
+For Illumina Methylation450k or EPIC, prepare a .pkl dataset in python3.8 with the following structure:
 
-- Column 1: `chrom` - Chromosome name
-- Column 2: `start_position` - 0-based start position  
-- Column 4: `modified_base_code` - Single letter code for modified base
-- Column 11: `fraction_modified` - Percentage of methylation (0-100)
+- **Rows**: Samples
+- **Columns**: CpG sites
+- **Values**: Beta values (0-1)
 
-The package automatically converts BED files to the internal methylation format using the reference CpG mapping.
+For nanopore WGS, follow the standard bedMethyl format with these key columns:
 
-## Model Outputs and Prediction Behavior
+- **Column 1**: `chrom` - Chromosome name
+- **Column 2**: `start_position` - 0-based start position  
+- **Column 4**: `modified_base_code` - Single letter code for modified base
+- **Column 11**: `fraction_modified` - Percentage of methylation (0-100)
 
-The package generates predictions with the following behavior:
+## Output
 
-1. **ALMA Subtype Classification**:
-   - Outputs the predicted subtype and its probability
-   - If confidence is below threshold (default 0.5), outputs "Not confident"
-   - For predictions with confidence between 0.5-0.8, also outputs the second most likely subtype and its probability
+Results include subtype classification, risk prediction, and confidence scores. Predictions below confidence threshold (default 0.5) are marked "Not confident".
 
-2. **AML Epigenomic Risk** (only for AML/MDS samples):
-   - Outputs "High" or "Low" risk prediction
-   - Includes P(Death) at 5y probability
-   - Outputs "Not confident" if prediction confidence is below threshold
-   - Non-AML/MDS samples receive "NaN" values
+## Limitations
 
-3. **38CpG AML Signature** (only for AML/MDS samples):
-   - Outputs continuous hazard score (38CpG-HazardScore)
-   - Provides binary risk stratification (38CpG-AMLsignature: High/Low)
-   - Non-AML/MDS samples receive "NaN" values
+The diagnostic model does not recognize: AML with Down Syndrome, juvenile myelomonocytic leukemia, transient abnormal myelopoiesis, low-risk MDS, or lymphomas.
 
 ## Citation
 
-If you use this package in your research, please cite:
-
 Francisco Marchi, Marieke Landwehr, Ann-Kathrin Schade et al. Long-read epigenomic diagnosis and prognosis of Acute Myeloid Leukemia, 12 December 2024, PREPRINT (Version 1) available at Research Square [https://doi.org/10.21203/rs.3.rs-5450972/v1]
-
-## License
-
-See license file.

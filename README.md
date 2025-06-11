@@ -29,11 +29,9 @@ pip install alma-classifier
 python -m alma_classifier.download_models
 ```
 
-### Important Notes
+### Important Note
 
-1. This is a pre-release research tool. Initial versions will be picky and annoying to deal with. Future versions will be flexible and easy to use.
-2. Our diagnostic model currently does not know about important cases, which we really need training data for: AML with Down Syndrome, juvenile myelomonocytic leukemia, transient abnormal myelopoiesis, bone marrow failures, low-risk MDS, lymphomas, and others.
-3. Our prognostic models (AML Epigenomic Risk and 38CpG AML Signature) are currently only limited to AML cases.
+Our diagnostic model currently does not know about important cases: AML with Down Syndrome, juvenile myelomonocytic leukemia, transient abnormal myelopoiesis, low-risk MDS, lymphomas, and others.
 
 ## Usage
 
@@ -41,8 +39,8 @@ python -m alma_classifier.download_models
 
 ```bash
 # Run with your own data (various formats supported)
-alma-classifier --input path/to/data.pkl --output path/to/predictions.xlsx
-alma-classifier --input path/to/sample.bed.gz --output path/to/predictions.xlsx
+alma-classifier --input path/to/dataset.pkl --output path/to/predictions.xlsx
+alma-classifier --input path/to/nanopore_sample.bed.gz --output path/to/predictions.csv
 
 # Try the demo with example dataset
 alma-classifier --demo --output predictions.xlsx
@@ -50,23 +48,14 @@ alma-classifier --demo --output predictions.xlsx
 
 ## Input Data Formats
 
-The package supports multiple input formats:
-
-### 1. Preprocessed Methylation Data
-- **Pickle files** (`.pkl`): Pandas DataFrame with methylation beta values
-- **CSV files** (`.csv`): Comma-separated values with samples as rows, CpGs as columns
-
-### 2. BED Files
-- **BED files** (`.bed`): Standard BED format with methylation data
-- **Compressed BED files** (`.bed.gz`): Gzip-compressed BED files
-
-For all formats:
 - Rows should represent samples
 - Columns should represent CpG sites  
 - Values should be between 0 and 1 (beta values)
 
 ### BED File Format
-BED files should follow the standard bedMethyl format with these key columns:
+
+BED files from nanopore WGS should follow the standard bedMethyl format with these key columns:
+
 - Column 1: `chrom` - Chromosome name
 - Column 2: `start_position` - 0-based start position  
 - Column 4: `modified_base_code` - Single letter code for modified base

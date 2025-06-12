@@ -9,6 +9,13 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     cmake \
     libgomp1 \
+    procps \
+    bash \
+    coreutils \
+    findutils \
+    grep \
+    sed \
+    gawk \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
@@ -30,9 +37,13 @@ RUN python -m alma_classifier.download_models
 ENV NUMBA_CACHE_DIR=/tmp
 ENV NUMBA_DISABLE_PERFORMANCE_WARNINGS=1
 
-# Create volume mount point for data
-VOLUME ["/data"]
+# Create a non-root user for security
+RUN useradd -m -u 1000 almauser && \
+    chown -R almauser:almauser /app
+USER almauser
 
-# Set the default command
-ENTRYPOINT ["alma-classifier"]
-CMD ["--help"]
+# Test that the entry point works
+RUN alma-classifier --help
+
+# Set default command (no ENTRYPOINT for flexibility like your VCF processor)
+CMD ["python", "-c", "print('ALMA Classifier Docker image ready!')"]

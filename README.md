@@ -32,13 +32,15 @@ python -m alma_classifier.download_models
 
 #### Demo
 ```bash
-docker run --rm -v $(pwd)/output:/output fmarchi/alma-classifier:0.1.4 --demo --output /output/demo_predictions.xlsx
+docker run --rm -v $(pwd):/output fmarchi/alma-classifier:0.1.4 \
+    alma-classifier --demo --output /output/demo_results.xlsx
 ```
 #### Your data
 
 ```bash
 ## Transfer your input data to ./data/
-docker run --rm -v "$(pwd)/data":/data -v "$(pwd)/output":/output   fmarchi/alma-classifier:0.1.4 --input /data/your_file.pkl --output /output/your_results.xlsx
+docker run --rm -v $(pwd):/data fmarchi/alma-classifier:0.1.4 \
+    alma-classifier --input /data/your_methylation_data.pkl --output /data/results.xlsx
 ```
 
 ### pip (python 3.8)

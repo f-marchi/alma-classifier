@@ -1,5 +1,7 @@
 # ALMA Classifier
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15636415.svg)](https://doi.org/10.5281/zenodo.15636415)
+
 A Python package for epigenomic diagnosis and prognosis of acute myeloid leukemia.
 
 ## Models

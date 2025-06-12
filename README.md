@@ -10,13 +10,13 @@ A Python package for epigenomic diagnosis and prognosis of acute myeloid leukemi
 
 ## Installation
 
-### Docker (Recommended)
+### Docker (recommended)
 
 ```bash
 docker pull fmarchi/alma-classifier:0.1.4
 ```
 
-### pip
+### pip (python 3.8)
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
@@ -30,37 +30,47 @@ python -m alma_classifier.download_models
 
 ### Docker
 
+#### Demo
 ```bash
-# Demo
 docker run --rm -v $(pwd)/output:/output fmarchi/alma-classifier:0.1.4 --demo --output /output/demo_predictions.xlsx
+```
+#### Your data
 
-# Your data
+```bash
 ## Transfer your input data to ./data/
 docker run --rm -v "$(pwd)/data":/data -v "$(pwd)/output":/output   fmarchi/alma-classifier:0.1.4 --input /data/your_file.pkl --output /output/your_results.xlsx
 ```
 
-### Command Line
-
+### pip (python 3.8)
+#### Demo
+```bash
+alma-classifier --demo --output demo_results.csv
+```
+#### Your data
 ```bash
 alma-classifier --input data.pkl --output predictions.xlsx
-alma-classifier --demo --output demo_results.csv
-alma-classifier --input data.pkl --output results.xlsx --confidence 0.5
 ```
 
 ## Input Formats
 
-For Illumina Methylation450k or EPIC, prepare a .pkl dataset in python3.8 with the following structure:
+### Illumina Methylation450k or EPIC
+Prepare a .pkl dataset in python3.8 with the following structure:
 
 - **Rows**: Samples
 - **Columns**: CpG sites
 - **Values**: Beta values (0-1)
 
-For nanopore WGS, follow the standard bedMethyl format with these key columns:
+Got .idat files? Use [SeSAMe](https://github.com/zwdzwd/sesame) first.
+
+### Nanopore whole genome sequencing
+Follow the standard bedMethyl format with these key columns:
 
 - **Column 1**: `chrom` - Chromosome name
 - **Column 2**: `start_position` - 0-based start position  
 - **Column 4**: `modified_base_code` - Single letter code for modified base
 - **Column 11**: `fraction_modified` - Percentage of methylation (0-100)
+
+Got .bam files? Use [modkit](https://nanoporetech.github.io/modkit/intro_pileup.html) first.
 
 ## Output
 

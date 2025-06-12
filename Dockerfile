@@ -26,6 +26,10 @@ RUN pip install -e .
 # Download model files
 RUN python -m alma_classifier.download_models
 
+# Set Numba environment variables to avoid caching issues
+ENV NUMBA_CACHE_DIR=/tmp
+ENV NUMBA_DISABLE_PERFORMANCE_WARNINGS=1
+
 # Create volume mount point for data
 VOLUME ["/data"]
 

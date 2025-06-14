@@ -74,7 +74,19 @@ Follow the standard bedMethyl format with these key columns:
 - **Column 4**: `modified_base_code` - Single letter code for modified base
 - **Column 11**: `fraction_modified` - Percentage of methylation (0-100)
 
-Got .bam files? Use [modkit](https://nanoporetech.github.io/modkit/intro_pileup.html) first.
+Got .bam files? Use [modkit](https://nanoporetech.github.io/modkit/intro_pileup.html) first:
+
+```bash
+modkit pileup \
+"$bam_file" \
+"$bed_file" \
+-t $threads \
+--combine-strands \
+--cpg \
+--ignore h \
+--ref ref/hg38.fna \
+--no-filtering
+```
 
 ## Output
 

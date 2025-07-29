@@ -10,6 +10,10 @@ A Python package for epigenomic diagnosis and prognosis of acute myeloid leukemi
 2. **AML Epigenomic Risk**: Predicts 5-year mortality probability for AML patients
 3. **38CpG AML Signature**: Risk stratification using targeted 38 CpG panel
 
+## New version coming soon
+
+In the next two weeks, we plan to release ALMA-Classifier v0.2.0, which will include significant accuracy improvements and a new autoencoder-transformer architecture. v0.1.4 (current) will remain available.
+
 ## Installation
 
 ### Docker (recommended)
@@ -33,10 +37,12 @@ python -m alma_classifier.download_models
 ### Docker
 
 #### Demo
+
 ```bash
 docker run --rm -v $(pwd):/output fmarchi/alma-classifier:0.1.4 \
     alma-classifier --demo --output /output/demo_results.xlsx
 ```
+
 #### Your data
 
 ```bash
@@ -46,11 +52,15 @@ docker run --rm -v $(pwd):/data fmarchi/alma-classifier:0.1.4 \
 ```
 
 ### pip (python 3.8)
+
 #### Demo
+
 ```bash
 alma-classifier --demo --output demo_results.csv
 ```
+
 #### Your data
+
 ```bash
 alma-classifier --input data.pkl --output predictions.xlsx
 ```
@@ -98,4 +108,4 @@ The diagnostic model does not recognize: AML with Down Syndrome, juvenile myelom
 
 ## Citation
 
-Francisco Marchi, Marieke Landwehr, Ann-Kathrin Schade et al. Long-read epigenomic diagnosis and prognosis of Acute Myeloid Leukemia, 12 December 2024, PREPRINT (Version 1) available at Research Square [https://doi.org/10.21203/rs.3.rs-5450972/v1]
+Marchi, F., Shastri, V.M., Marrero, R.J. et al. Epigenomic diagnosis and prognosis of Acute Myeloid Leukemia. Nat Commun 16, 6961 (2025). <https://doi.org/10.1038/s41467-025-62005-4>

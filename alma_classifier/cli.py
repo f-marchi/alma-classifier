@@ -25,7 +25,7 @@ def main():
     )
     parser.add_argument(
         "--output",
-        required=True,
+        required=False,
         type=str,
         help="Path for output predictions (.xlsx or .csv)"
     )
@@ -35,12 +35,31 @@ def main():
         default=0.5,
         help="Confidence threshold for predictions (default: 0.5)"
     )
+    parser.add_argument(
+        "--include-v2",
+        action="store_true",
+        help="Include ALMA Subtype v2 predictions (transformer-based model)"
+    )
+    parser.add_argument(
+        "--download-models-v2",
+        action="store_true",
+        help="Download ALMA v2 transformer models"
+    )
 
     args = parser.parse_args()
     
     try:
+        # Handle v2 model download
+        if args.download_models_v2:
+            from .download_models import main_v2
+            main_v2()
+            return
+            
         if not args.demo and not args.input:
             parser.error("--input is required when not using --demo")
+            
+        if not args.output:
+            parser.error("--output is required when not downloading models")
             
         if args.demo:
             from pathlib import Path
@@ -67,7 +86,10 @@ def main():
             sys.exit(1)
             
         # Initialize predictor
-        predictor = ALMAPredictor(confidence_threshold=args.confidence)
+        predictor = ALMAPredictor(
+            confidence_threshold=args.confidence,
+            include_v2=args.include_v2
+        )
         
         print("Starting prediction process...")
         

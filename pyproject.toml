@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "alma-classifier"
-version = "0.1.4"
-description = "A Python package for applying pre-trained epigenomic classification models"
+version = "0.2.0"
+description = "A Python package for applying pre-trained epigenomic classification models with transformer-based ALMA Subtype v2"
 dynamic = ["authors", "classifiers"]
 readme = "README.md"
 requires-python = ">=3.8,<3.12"
@@ -17,11 +17,16 @@ dependencies = [
     "lightgbm~=4.6.0",
     "joblib~=1.3.2",
     "openpyxl>=3.0.0",
-    "setuptools>=75.3.0"
+    "setuptools>=75.3.0",
+    "pacmap==0.7.0"
 ]
+
+[project.optional-dependencies]
+v2 = ["torch>=1.11.0"]
 
 [project.scripts]
 alma-classifier = "alma_classifier.cli:main"
+alma-classifier-download-v2 = "alma_classifier.download_models:main_v2"
 
 [tool.setuptools.packages.find]
 include = ["alma_classifier*"]

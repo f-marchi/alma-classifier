@@ -7,29 +7,39 @@ A Python package for epigenomic diagnosis and prognosis of acute myeloid leukemi
 ## Models
 
 1. **ALMA Subtype**: Classifies 28 subtypes (27 WHO 2022 acute leukemia subtypes + normal control)
-2. **AML Epigenomic Risk**: Predicts 5-year mortality probability for AML patients
-3. **38CpG AML Signature**: Risk stratification using targeted 38 CpG panel
+2. **ALMA Subtype v2**: New transformer-based diagnostic model with improved accuracy
+3. **AML Epigenomic Risk**: Predicts 5-year mortality probability for AML patients
+4. **38CpG AML Signature**: Risk stratification using targeted 38 CpG panel
 
-## New version coming soon
+## What's New in v0.2.0
 
-In the next two weeks, we plan to release ALMA-Classifier v0.2.0, which will include significant accuracy improvements and a new autoencoder-transformer architecture. v0.1.4 (current) will remain available.
+- **ALMA Subtype v2**: New transformer-based diagnostic model using autoencoder feature extraction
+- Enhanced accuracy through ensemble prediction across multiple folds
+- Optional PyTorch integration for advanced deep learning models
+- Backward compatibility with existing v1 models
 
 ## Installation
 
 ### Docker (recommended)
 
 ```bash
-docker pull fmarchi/alma-classifier:0.1.4
+docker pull fmarchi/alma-classifier:0.2.0
 ```
 
-### pip (python 3.8)
+### pip (python 3.8-3.12)
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install pacmap==0.7.0
 # MacOS users need `brew install lightgbm`
 pip install alma-classifier
+
+# Download standard models
 python -m alma_classifier.download_models
+
+# Optional: Install PyTorch and download v2 models for transformer-based predictions
+pip install alma-classifier[v2]
+alma-classifier --download-models-v2
 ```
 
 ## Usage
@@ -39,7 +49,7 @@ python -m alma_classifier.download_models
 #### Demo
 
 ```bash
-docker run --rm -v $(pwd):/output fmarchi/alma-classifier:0.1.4 \
+docker run --rm -v $(pwd):/output fmarchi/alma-classifier:0.2.0 \
     alma-classifier --demo --output /output/demo_results.xlsx
 ```
 
@@ -47,11 +57,18 @@ docker run --rm -v $(pwd):/output fmarchi/alma-classifier:0.1.4 \
 
 ```bash
 ## Transfer your input data to ./data/
-docker run --rm -v $(pwd):/data fmarchi/alma-classifier:0.1.4 \
+docker run --rm -v $(pwd):/data fmarchi/alma-classifier:0.2.0 \
     alma-classifier --input /data/your_methylation_data.pkl --output /data/results.xlsx
 ```
 
-### pip (python 3.8)
+#### Using ALMA Subtype v2
+
+```bash
+docker run --rm -v $(pwd):/output fmarchi/alma-classifier:0.2.0 \
+    alma-classifier --demo --output /output/demo_results_v2.xlsx --include-v2
+```
+
+### pip (python 3.8-3.12)
 
 #### Demo
 
@@ -63,6 +80,16 @@ alma-classifier --demo --output demo_results.csv
 
 ```bash
 alma-classifier --input data.pkl --output predictions.xlsx
+```
+
+#### Using ALMA Subtype v2
+
+```bash
+# First download v2 models (requires PyTorch)
+alma-classifier --download-models-v2
+
+# Run with v2 predictions
+alma-classifier --input data.pkl --output predictions_v2.xlsx --include-v2
 ```
 
 ## Input Formats

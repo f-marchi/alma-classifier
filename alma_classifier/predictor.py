@@ -1,9 +1,9 @@
 """Main predictor class for ALMA classifier."""
 import numpy as np
 import pandas as pd
-from typing import Union
+from typing import Union, Optional
 from pathlib import Path
-from .models import load_models
+from .models import load_models, validate_models_v2
 from .preprocessing import process_methylation_data, apply_pacmap
 
 class ALMAPredictor:
@@ -13,17 +13,60 @@ class ALMAPredictor:
     Provides methods for:
     - Epigenetic subtype classification
     - AML risk stratification for AML/MDS samples only
+    - ALMA Subtype v2 predictions (transformer-based)
     """
     
-    def __init__(self, confidence_threshold: float = 0.5):
+    def __init__(self, confidence_threshold: float = 0.5, include_v2: bool = False):
         """
         Initialize ALMA predictor.
         
         Args:
             confidence_threshold: Minimum probability threshold for predictions
+            include_v2: Whether to include ALMA Subtype v2 predictions
         """
         self.pacmap_model, self.lgbm_models = load_models()
         self.confidence_threshold = confidence_threshold
+        self.include_v2 = include_v2
+        self.alma_v2 = None
+        
+        # Initialize v2 model if requested
+        if self.include_v2:
+            self._init_v2_model()
+    
+    def _init_v2_model(self):
+        """Initialize ALMA v2 model."""
+        try:
+            # Check if v2 models are available
+            models_valid, error_msg = validate_models_v2()
+            if not models_valid:
+                print(f"Warning: {error_msg}")
+                print("ALMA Subtype v2 will be disabled.")
+                self.include_v2 = False
+                return
+                
+            from .alma_v2_core import ALMAv2
+            self.alma_v2 = ALMAv2()
+            
+            # Load the models
+            try:
+                self.alma_v2.load_auto()
+                self.alma_v2.load_diag()
+                print("ALMA Subtype v2 models loaded successfully.")
+            except ImportError as e:
+                print(f"Warning: {str(e)}")
+                print("ALMA Subtype v2 will be disabled.")
+                self.include_v2 = False
+                self.alma_v2 = None
+            except Exception as e:
+                print(f"Warning: Error loading ALMA v2 models: {str(e)}")
+                print("ALMA Subtype v2 will be disabled.")
+                self.include_v2 = False
+                self.alma_v2 = None
+                
+        except ImportError:
+            print("Warning: ALMA Subtype v2 dependencies not available.")
+            print("ALMA Subtype v2 will be disabled.")
+            self.include_v2 = False
         
     def predict(
         self,
@@ -64,9 +107,6 @@ class ALMAPredictor:
                 aml_mds_signatures = generate_coxph_score(methyl_data[is_aml_mds])
                 signature_results.loc[is_aml_mds] = aml_mds_signatures
         
-        # Generate subtype predictions first
-        subtype_results = self._predict_subtype(features)
-        
         # Initialize empty risk results with same index as features
         risk_results = pd.DataFrame(index=features.index)
         
@@ -83,9 +123,46 @@ class ALMAPredictor:
             risk_predictions = self._predict_risk(aml_features)
             # Update only the rows that have AML/MDS predictions
             risk_results.loc[is_aml_mds] = risk_predictions
+        
+        # Generate v2 predictions if enabled
+        v2_results = pd.DataFrame(index=methyl_data.index)
+        if self.include_v2 and self.alma_v2 is not None:
+            try:
+                # Save methylation data temporarily for v2 prediction
+                import tempfile
+                with tempfile.NamedTemporaryFile(suffix='.pkl', delete=False) as tmp_file:
+                    methyl_data.to_pickle(tmp_file.name)
+                    
+                    # Get v2 predictions
+                    v2_output = self.alma_v2.predict(tmp_file.name)
+                    v2_df = pd.read_csv(v2_output)
+                    
+                    # Align with original index
+                    v2_results['ALMA Subtype v2'] = pd.Series(
+                        v2_df['ALMA Subtype v2'].values, 
+                        index=methyl_data.index
+                    )
+                    v2_results['Diagnostic Confidence v2'] = pd.Series(
+                        v2_df['Diagnostic Confidence v2'].values, 
+                        index=methyl_data.index
+                    )
+                    
+                    # Clean up temp files
+                    import os
+                    os.unlink(tmp_file.name)
+                    if v2_output.exists():
+                        v2_output.unlink()
+                        
+            except Exception as e:
+                print(f"Warning: Error generating ALMA v2 predictions: {str(e)}")
+                v2_results['ALMA Subtype v2'] = np.nan
+                v2_results['Diagnostic Confidence v2'] = np.nan
+        else:
+            v2_results['ALMA Subtype v2'] = np.nan
+            v2_results['Diagnostic Confidence v2'] = np.nan
             
         # Combine all results
-        return pd.concat([subtype_results, risk_results, signature_results], axis=1)
+        return pd.concat([subtype_results, risk_results, signature_results, v2_results], axis=1)
     
     def _predict_subtype(self, features: pd.DataFrame) -> pd.DataFrame:
         """Generate epigenetic subtype predictions."""

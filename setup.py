@@ -13,7 +13,7 @@ setup(
             'alma-classifier=alma_classifier.cli:main',
         ],
     },
-    python_requires=">=3.8,<=3.10",
+    python_requires=">=3.8,<=3.12",
     author="Francisco Marchi",
     author_email="flourenco@ufl.edu",
     description="A Python package for applying pre-trained epigenomic classification models",

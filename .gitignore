@@ -7,7 +7,7 @@ __pycache__/
 *.egg-info/
 
 # Virtual environment
-.venv/
+.venv*
 env/
 venv/
 
@@ -24,6 +24,7 @@ htmlcov/
 .nox/
 .pytest_cache/
 temp.csv
+results/
 
 # Jupyter Notebook
 .ipynb_checkpoints/

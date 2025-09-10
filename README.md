@@ -17,7 +17,7 @@ Epigenomic diagnosis of acute leukemia and prognosis of AML.
 - **ALMA Subtype v2**:
   - New diagnostic model using autoencoder-transformer architecture
   - Near-perfect accuracy in both methylation arrays and nanopore epigenomes
-  - v0.1.4 (from our NatComms paper) remains available.
+  - v0.1.4 (from the publication) remains available in pip and docker.
 
 ## Installation
 

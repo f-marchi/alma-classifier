@@ -138,3 +138,16 @@ def get_demo_data_path() -> Path | None:
     if demo_file.exists():
         return demo_file
     return None
+
+
+def main() -> None:  # pragma: no cover - thin wrapper
+    """Module entrypoint for `python -m alma_classifier.download`.
+
+    Exits with status 1 if model download fails so Docker build can fail fast.
+    """
+    if not download_models():
+        raise SystemExit(1)
+
+
+if __name__ == "__main__":  # pragma: no cover
+    main()

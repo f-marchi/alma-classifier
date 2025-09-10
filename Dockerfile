@@ -38,10 +38,9 @@ COPY alma_classifier ./alma_classifier
 RUN pip install --no-cache-dir .
 
 ############################
-# Download model artifacts at build time (can be skipped with --build-arg SKIP_MODEL_DOWNLOAD=1)
+# Download model artifacts at build time
 ############################
-ARG SKIP_MODEL_DOWNLOAD=0
-RUN if [ "$SKIP_MODEL_DOWNLOAD" = "0" ]; then python -m alma_classifier.download_models; else echo "Skipping model download"; fi
+RUN python -m alma_classifier.download
 
 ############################
 # Runtime environment variables

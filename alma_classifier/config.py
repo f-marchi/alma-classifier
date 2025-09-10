@@ -1,16 +1,10 @@
-"""
-Configuration classes for ALMA Subtype v2 models.
-"""
 from dataclasses import dataclass
-from typing import Optional
-
 
 @dataclass
-class TransformerConfig:
-    """Configuration for TabularTransformer model."""
-    d_model: int = 128
-    n_heads: int = 8
-    n_layers: int = 4
-    dropout: float = 0.1
-    num_features: Optional[int] = None
-    num_classes: Optional[int] = None
+class Config:
+    d_model: int
+    n_heads: int
+    n_layers: int
+    dropout: float = 0.2
+    num_features: int = None
+    num_classes: int = None

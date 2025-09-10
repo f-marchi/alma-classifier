@@ -2,21 +2,20 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15636415.svg)](https://doi.org/10.5281/zenodo.15636415)
 
-A Python package for epigenomic diagnosis and prognosis of acute myeloid leukemia.
+Epigenomic diagnosis of acute leukemia and prognosis of AML.
 
 ## Models
 
-1. **ALMA Subtype**: Classifies 28 subtypes (27 WHO 2022 acute leukemia subtypes + normal control)
-2. **ALMA Subtype v2**: New transformer-based diagnostic model with improved accuracy
-3. **AML Epigenomic Risk**: Predicts 5-year mortality probability for AML patients
-4. **38CpG AML Signature**: Risk stratification using targeted 38 CpG panel
+1. **ALMA Subtype**: Classifies 27 subtypes of acute leukemia according to WHO 2022 + healthy control
+2. **AML Epigenomic Risk (v0.1.4 only)**: Predicts 5-year mortality probability for AML patients
+3. **38CpG AML Signature**: Risk stratification using targeted 38 CpG panel
 
 ## What's New in v0.2.0
 
-- **ALMA Subtype v2**: New transformer-based diagnostic model using autoencoder feature extraction
-- Enhanced accuracy through ensemble prediction across multiple folds
-- Optional PyTorch integration for advanced deep learning models
-- Backward compatibility with existing v1 models
+- **ALMA Subtype v2**:
+  - New diagnostic model using autoencoder-transformer architecture
+  - Near-perfect accuracy in both methylation arrays and nanopore epigenomes
+  - v0.1.4 (from our NatComms paper) remains available.
 
 ## Installation
 
@@ -26,20 +25,10 @@ A Python package for epigenomic diagnosis and prognosis of acute myeloid leukemi
 docker pull fmarchi/alma-classifier:0.2.0
 ```
 
-### pip (python 3.8-3.12)
+### Python 3.11
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
-pip install pacmap==0.7.0
-# MacOS users need `brew install lightgbm`
 pip install alma-classifier
-
-# Download standard models
-python -m alma_classifier.download_models
-
-# Optional: Install PyTorch and download v2 models for transformer-based predictions
-pip install alma-classifier[v2]
-alma-classifier --download-models-v2
 ```
 
 ## Usage
@@ -57,18 +46,11 @@ docker run --rm -v $(pwd):/output fmarchi/alma-classifier:0.2.0 \
 
 ```bash
 ## Transfer your input data to ./data/
-docker run --rm -v $(pwd):/data fmarchi/alma-classifier:0.2.0 \
+docker run --rm -v $(pwd):/data fmarchi/alma-classifier:0.1.4 \
     alma-classifier --input /data/your_methylation_data.pkl --output /data/results.xlsx
 ```
 
-#### Using ALMA Subtype v2
-
-```bash
-docker run --rm -v $(pwd):/output fmarchi/alma-classifier:0.2.0 \
-    alma-classifier --demo --output /output/demo_results_v2.xlsx --include-v2
-```
-
-### pip (python 3.8-3.12)
+### pip (python 3.8)
 
 #### Demo
 
@@ -82,20 +64,11 @@ alma-classifier --demo --output demo_results.csv
 alma-classifier --input data.pkl --output predictions.xlsx
 ```
 
-#### Using ALMA Subtype v2
-
-```bash
-# First download v2 models (requires PyTorch)
-alma-classifier --download-models-v2
-
-# Run with v2 predictions
-alma-classifier --input data.pkl --output predictions_v2.xlsx --include-v2
-```
-
 ## Input Formats
 
 ### Illumina Methylation450k or EPIC
-Prepare a .pkl dataset in python3.8 with the following structure:
+
+Prepare a .pkl (or csv.gz) dataset with the following structure:
 
 - **Rows**: Samples
 - **Columns**: CpG sites
@@ -104,6 +77,7 @@ Prepare a .pkl dataset in python3.8 with the following structure:
 Got .idat files? Use [SeSAMe](https://github.com/zwdzwd/sesame) first.
 
 ### Nanopore whole genome sequencing
+
 Follow the standard bedMethyl format with these key columns:
 
 - **Column 1**: `chrom` - Chromosome name
@@ -127,11 +101,13 @@ modkit pileup \
 
 ## Output
 
-Results include subtype classification, risk prediction, and confidence scores. Predictions below confidence threshold (default 0.5) are marked "Not confident".
+Results include subtype classification, risk prediction, and confidence scores.
 
-## Limitations
+## Important limitations
 
-The diagnostic model does not recognize: AML with Down Syndrome, juvenile myelomonocytic leukemia, transient abnormal myelopoiesis, low-risk MDS, or lymphomas.
+- The diagnostic model does not currently recognize: AML with Down Syndrome, juvenile myelomonocytic leukemia, transient abnormal myelopoiesis, low-risk MDS, or lymphomas. We need reference methylation data for these patient populations.
+- Follow preprocessing as instructed in "Input Formats" above. Different or erroneous preprocessing may lead to poor performance. This applies to bad wet-lab handling of samples.
+- The models will attempt to work with missing CpGs. Ideally, use Methylation Array 450k,EPIC or WGS Nanopore Seq with >5x coverage. Anything below that may compromise performance.
 
 ## Citation
 

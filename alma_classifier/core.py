@@ -81,7 +81,31 @@ class ALMA:
         d = self.base / "alma_transformers" / name
         labels = pickle.load(open(d / "label_encoder.pkl", "rb"))
         ep_path = d / "ensemble_predictor.pkl"
-        obj = pickle.load(open(ep_path, "rb"))
+
+        # Models were saved on a CUDA box; enforce CPU mapping when CUDA is unavailable.
+        # Try torch.load first (covers torch.save artifacts); fall back to raw pickle.
+        obj = None
+        # 1) Try torch.load with explicit CPU mapping
+        try:
+            obj = torch.load(ep_path, map_location=lambda storage, loc: storage.cpu(), weights_only=False)
+        except Exception as e1:
+            # 2) Fallback: monkeypatch torch.serialization.default_restore_location to coerce cuda->cpu
+            # Access torch.serialization via attribute to satisfy static analysis
+            _ts = torch.serialization
+            orig_restore = _ts.default_restore_location
+            def _forced_cpu_restore(storage, location):
+                if isinstance(location, str) and location.startswith("cuda"):
+                    location = "cpu"
+                return orig_restore(storage, location)
+            _ts.default_restore_location = _forced_cpu_restore
+            try:
+                with open(ep_path, "rb") as fh:
+                    obj = pickle.load(fh)
+            except Exception as e2:
+                # 3) Re-raise with combined context
+                raise RuntimeError(f"Failed to load ensemble predictor on CPU. torch.load error: {e1}; pickle fallback error: {e2}") from e2
+            finally:
+                _ts.default_restore_location = orig_restore
 
         if isinstance(obj, EnsemblePredictor):
             # Ensure models are on correct device

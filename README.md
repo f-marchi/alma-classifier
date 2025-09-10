@@ -1,6 +1,8 @@
 # ALMA Classifier
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15636415.svg)](https://doi.org/10.5281/zenodo.15636415)
+[![Nat Commun](https://img.shields.io/badge/Nat%20Commun-2025-0a7bbc.svg)](https://www.nature.com/articles/s41467-025-62005-4)
+[![Downloads](https://static.pepy.tech/personalized-badge/alma-classifier?period=total&units=international_system&left_color=grey&right_color=blue&left_text=Downloads)](https://pepy.tech/project/alma-classifier)
 
 Epigenomic diagnosis of acute leukemia and prognosis of AML.
 

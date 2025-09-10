@@ -13,7 +13,7 @@ from tqdm import tqdm
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 logger = logging.getLogger(__name__)
 
-# Default GitHub release URL - will be updated with final release
+# Default GitHub release URL
 DEFAULT_RELEASE_URL = "https://github.com/f-marchi/ALMA-classifier/releases/download/0.2.0a0/alma-models.tar.gz"
 
 def get_models_dir() -> Path:

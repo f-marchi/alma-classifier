@@ -1,47 +1,26 @@
-# Byte-compiled / cached files
+# ---------------- virtual env ----------------
+.venv/
+
+# ---------------- Python build / cache ----------------
 __pycache__/
 *.py[cod]
-*$py.class
+*.so                     # compiled extensions
 
-# python package files
-*.egg-info/
-
-# Virtual environment
-.venv/
-env/
-venv/
-
-# Distribution / packaging
+# ---------------- packaging outputs ----------------
 build/
 dist/
 *.egg-info/
-pip-wheel-metadata/
 
-# Testing
-.coverage
-htmlcov/
-.tox/
-.nox/
+# ---------------- model data (now downloaded separately) ----------------
+data/
+models/
+results/
+alma-models.tar.gz
+
+# ---------------- tooling caches ----------------
 .pytest_cache/
-temp.csv
+.mypy_cache/
 
-# Jupyter Notebook
-.ipynb_checkpoints/
-
-# IDE / Editor specific
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Logs and temp files
-*.log
-*.tmp
+# ---------------- OS cruft ----------------
 .DS_Store
 Thumbs.db
-
-# Models 
-models/
-
-# Attached assets
-attached_assets/

@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 logger = logging.getLogger(__name__)
 
 # Default GitHub release URL - will be updated with final release
-DEFAULT_RELEASE_URL = "https://github.com/pedro-orsini/alma-transformer/releases/download/0.2.0/alma-models.tar.gz"
+DEFAULT_RELEASE_URL = "https://github.com/f-marchi/ALMA-classifier/releases/download/0.2.0a0/alma-models.tar.gz"
 
 def get_models_dir() -> Path:
     """Get the directory where models should be stored."""
@@ -82,14 +82,10 @@ def download_file(url: str, destination: Path, desc: str = "Downloading") -> Non
                 pbar.update(len(chunk))
 
 def extract_models(archive_path: Path, destination: Path) -> None:
-    """Extract the models archive."""
-    logger.info(f"Extracting models to {destination}")
-    
+    """Extract the models archive."""   
     with tarfile.open(archive_path, 'r:gz') as tar:
         # Extract all files
         tar.extractall(destination)
-    
-    logger.info("Models extracted successfully")
 
 def download_models() -> bool:
     """Download ALMA classifier models."""
@@ -125,12 +121,13 @@ def download_models() -> bool:
             
             # Extract models
             extract_models(archive_path, base_models_dir)
-            
-        logger.info(f"Models successfully downloaded to {base_models_dir}")
+
+        logger.info(f"Models successfully downloaded to {base_models_dir}.")
+        logger.info("You may now run a demo: `alma-classifier --demo` or use your own data: `alma-classifier -i path/to/your_data.pkl`.")
         return True
         
     except Exception as e:
-        logger.error(f"Failed to download models: {e}")
+        logger.error(f"Failed to download models: {e}.")
         return False
 
 def get_demo_data_path() -> Path | None:

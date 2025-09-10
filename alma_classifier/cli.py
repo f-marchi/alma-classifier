@@ -32,7 +32,6 @@ def main() -> None:
         if not success:
             print("Failed to download models. Please check your internet connection and try again.")
             return
-        print("Models downloaded successfully!")
         return
 
     # Handle demo mode

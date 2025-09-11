@@ -47,7 +47,7 @@ docker run --rm -v "$(pwd)":/work -w /work fmarchi/alma-classifier:0.2.0 \
 Run using your data:
 
 ```bash
-# CSV/CSV.GZ, BED/BED.GZ, or PKL
+# Transfer your input data to current working directory
 docker run --rm -v "$(pwd)":/work -w /work fmarchi/alma-classifier:0.2.0 \
   alma-classifier -i /work/your_data.pkl
 ```

@@ -41,6 +41,21 @@ class ALMA:
         self.diag = self.dlabels = None
 
     # ---------- loaders ----------
+    def _ensure_features_axis(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Ensure data is shaped as samples x features.
+
+        Requirement: number of features must be greater than number of samples.
+        If not, assume the input is transposed and fix by transposing.
+        """
+        n_samples, n_features = df.shape[0], df.shape[1]
+        if n_features > n_samples:
+            return df
+        logging.info(
+            "Input appears transposed (features=%d, samples=%d). Auto-transposing.",
+            n_features, n_samples,
+        )
+        return df.T
+
     def load_auto(self):
         """Load autoencoder + scaler."""
         p = self.base / "alma_autoencoders" / "alma_shukuchi"
@@ -183,6 +198,7 @@ class ALMA:
             # Handle uncompressed CSV
             df = pd.read_csv(csv_path, index_col=0)
         
+        df = self._ensure_features_axis(df)
         print(f"Loaded CSV with {len(df)} samples and {len(df.columns)} features")
         return df
 
@@ -195,6 +211,7 @@ class ALMA:
         if is_bed_file(input_path):
             print(f"Detected BED file format: {input_path.name}")
             df = process_bed_to_methylation(input_path)
+            df = self._ensure_features_axis(df)
         elif input_path.name.endswith('.csv.gz') or input_path.suffix == '.csv':
             # Handle CSV files (compressed or uncompressed)
             print(f"Detected CSV file format: {input_path.name}")
@@ -202,6 +219,7 @@ class ALMA:
         else:
             # Assume it's a pickle file
             df = pd.read_pickle(input_file)
+            df = self._ensure_features_axis(df)
         
         latent = self._latent(self._prep(df))
 

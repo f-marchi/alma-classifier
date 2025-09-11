@@ -3,35 +3,41 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15636415.svg)](https://doi.org/10.5281/zenodo.15636415)
 [![Nat Commun](https://img.shields.io/badge/Nat%20Commun-2025-0a7bbc.svg)](https://www.nature.com/articles/s41467-025-62005-4)
 [![Downloads](https://static.pepy.tech/personalized-badge/alma-classifier?period=total&units=international_system&left_color=grey&right_color=blue&left_text=Downloads)](https://pepy.tech/project/alma-classifier)
+[![Python versions](https://img.shields.io/pypi/pyversions/alma-classifier.svg)](https://pypi.org/project/alma-classifier/)
+[![Docker pulls](https://img.shields.io/docker/pulls/fmarchi/alma-classifier.svg)](https://hub.docker.com/r/fmarchi/alma-classifier)
+[![Research Use Only](https://img.shields.io/badge/Use-Research%20Only-orange.svg)](#important-limitations)
 
 Epigenomic diagnosis of acute leukemia and prognosis of AML.
 
 ## Models
 
 1. **ALMA Subtype**: Classifies 27 subtypes of acute leukemia according to WHO 2022 + healthy control
-2. **AML Epigenomic Risk (v0.1.4 only)**: Predicts 5-year mortality probability for AML patients
-3. **38CpG AML Signature**: Risk stratification using targeted 38 CpG panel
+2. **38CpG AML Signature**: Risk stratification using targeted 38 CpG panel
+3. **AML Epigenomic Risk (v0.1.4 only)**: Predicts 5-year mortality probability for AML patients
 
-## What's New in v0.2.0
+## What's New
 
-- **ALMA Subtype v2**:
-  - New diagnostic model using autoencoder-transformer architecture
-  - Near-perfect accuracy in both methylation arrays and nanopore epigenomes
-  - v0.1.4 (from the publication) remains available in pip and docker.
+- **ALMA Subtype v2**
+  - Autoencoder–transformer architecture
+  - Near-perfect accuracy across methylation arrays and nanopore epigenomes
+  - v0.1.4 classifiers (from the publication) remain available in pip and docker.
 
 ## Installation
 
 ### Docker (recommended)
 
 ```bash
-docker pull fmarchi/alma-classifier:0.2.0
+docker pull fmarchi/alma-classifier:0.2.1
 ```
 
 ### Python 3.11
 
 ```bash
+pip install --extra-index-url https://download.pytorch.org/whl/cpu "torch==2.8.0+cpu"
 pip install alma-classifier
 ```
+
+If you have a CUDA-enabled system, want GPU acceleration, and don't mind the extra dependency weight, install the matching CUDA build instead with `pip install torch>=2.8.0`.
 
 ## Usage
 
@@ -40,7 +46,7 @@ pip install alma-classifier
 Run demo:
 
 ```bash
-docker run --rm -v "$(pwd)":/work -w /work fmarchi/alma-classifier:0.2.0 \
+docker run --rm -v "$(pwd)":/work -w /work fmarchi/alma-classifier:0.2.1 \
   alma-classifier --demo
 ```
 
@@ -48,7 +54,7 @@ Run using your data:
 
 ```bash
 # Transfer your input data to current working directory
-docker run --rm -v "$(pwd)":/work -w /work fmarchi/alma-classifier:0.2.0 \
+docker run --rm -v "$(pwd)":/work -w /work fmarchi/alma-classifier:0.2.1 \
   alma-classifier -i /work/your_data.pkl
 ```
 

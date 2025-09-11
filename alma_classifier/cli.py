@@ -92,19 +92,22 @@ def main() -> None:
             input_data = temp_pkl
         else:
             input_data = demo_data
-        
-        # Set output to a demo results file in results/ folder
-        results_dir = Path.cwd() / "results"
-        output_file = _pick_output_path(results_dir, "demo_predictions.csv")
+
+        # Pick output: honor --output if provided, else default to CWD
+        if args.output:
+            output_file = Path(args.output)
+            if not _ensure_parent_writable(output_file):
+                ap.error(f"Cannot write to the specified output path: {output_file}. Choose a writable location.")
+        else:
+            output_file = _pick_output_path(Path.cwd(), "demo_predictions.csv")
     else:
         # Regular mode requires input data
         if not args.input_data:
             ap.error("--input_data is required (unless using --demo or --download-models)")
         input_data = args.input_data
         
-        # If no output specified, create results/ folder and use default name
+        # If no output specified, default to current working directory
         if args.output is None:
-            results_dir = Path.cwd() / "results"
             input_path = Path(input_data)
             # Handle different file extensions appropriately
             if input_path.name.endswith('.bed.gz'):
@@ -115,7 +118,7 @@ def main() -> None:
                 stem = input_path.stem
             else:
                 stem = input_path.stem
-            output_file = _pick_output_path(results_dir, f"{stem}_predictions.csv")
+            output_file = _pick_output_path(Path.cwd(), f"{stem}_predictions.csv")
         else:
             output_file = Path(args.output)
             if not _ensure_parent_writable(output_file):

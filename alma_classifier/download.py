@@ -2,6 +2,7 @@
 Model download utilities for ALMA classifier.
 """
 import logging
+import os
 import shutil
 import tarfile
 import tempfile
@@ -17,17 +18,37 @@ logger = logging.getLogger(__name__)
 DEFAULT_RELEASE_URL = "https://github.com/f-marchi/ALMA-classifier/releases/download/0.2.0a0/alma-models.tar.gz"
 
 def get_models_dir() -> Path:
-    """Get the directory where models should be stored."""
-    # Use project directory to store models
-    base_models_dir = Path(__file__).parent.parent / "models"
+    """Return the directory where models are stored (read/write safe).
+
+    Resolution order:
+    1) Environment variable ALMA_MODELS_DIR (respected in Docker image)
+    2) If models bundled in the image under package "../models" exist, use them (read-only OK)
+    3) User data dir (XDG_DATA_HOME or ~/.local/share)/alma-classifier/models
+    """
+    # 1) Env override (recommended in Docker)
+    env_dir = os.getenv("ALMA_MODELS_DIR")
+    if env_dir:
+        p = Path(env_dir)
+        p.mkdir(parents=True, exist_ok=True)
+        data_dir = p / "data"
+        return data_dir if data_dir.exists() else p
+
+    # 2) Use packaged models directory if present (do NOT try to create under site-packages)
+    pkg_models = Path(__file__).parent.parent / "models"
+    if pkg_models.exists():
+        data_dir = pkg_models / "data"
+        return data_dir if data_dir.exists() else pkg_models
+
+    # 3) User data directory (writable)
+    xdg_data_home = os.getenv("XDG_DATA_HOME")
+    if xdg_data_home:
+        user_base = Path(xdg_data_home)
+    else:
+        user_base = Path.home() / ".local" / "share"
+    base_models_dir = user_base / "alma-classifier" / "models"
     base_models_dir.mkdir(parents=True, exist_ok=True)
-    
-    # If the data subdirectory exists (models have been extracted), return that path
     data_dir = base_models_dir / "data"
-    if data_dir.exists():
-        return data_dir
-    
-    return base_models_dir
+    return data_dir if data_dir.exists() else base_models_dir
 
 def get_local_archive_path() -> Path:
     """Get path to local archive file."""

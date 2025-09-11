@@ -40,6 +40,8 @@ RUN pip install --no-cache-dir .
 ############################
 # Download model artifacts at build time
 ############################
+# Store models in a writable, shared location (also used at runtime)
+ENV ALMA_MODELS_DIR=/app/models
 RUN python -m alma_classifier.download
 
 ############################

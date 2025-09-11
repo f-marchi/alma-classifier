@@ -236,5 +236,12 @@ class ALMA:
             logging.warning("38CpG signature skipped: %s", e)
 
         out = Path(output_file) if output_file else Path(input_file).with_name("alma_predictions.csv")
-        res.to_csv(out, index=False)
+        try:
+            out.parent.mkdir(parents=True, exist_ok=True)
+        except Exception:
+            pass
+        try:
+            res.to_csv(out, index=False)
+        except PermissionError as e:
+            raise PermissionError(f"Cannot write output CSV to '{out}'. Please choose a writable location (e.g., use --output ~/ALMA-results/yourfile.csv). Original error: {e}")
         return out

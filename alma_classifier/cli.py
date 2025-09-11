@@ -10,6 +10,39 @@ from .utils import set_deterministic
 from .download import download_models, get_demo_data_path
 
 def main() -> None:
+    def _ensure_parent_writable(path: Path) -> bool:
+        """Ensure parent dir exists and is writable. Returns True if OK, else False."""
+        parent = path.parent
+        try:
+            parent.mkdir(parents=True, exist_ok=True)
+            test = parent / ".__alma_write_test__"
+            with open(test, "w") as _:
+                pass
+            test.unlink(missing_ok=True)
+            return True
+        except Exception:
+            return False
+
+    def _pick_output_path(preferred_dir: Path, filename: str) -> Path:
+        """Pick a writable output path. If preferred_dir isn't writable, fallback to ~/ALMA-results."""
+        preferred = preferred_dir / filename
+        if _ensure_parent_writable(preferred):
+            return preferred
+        # Fallback in home
+        home_dir = Path.home() / "ALMA-results"
+        home_dir.mkdir(parents=True, exist_ok=True)
+        alt = home_dir / filename
+        # Last resort: ensure we can write there; if not, use CWD
+        if _ensure_parent_writable(alt):
+            print(f"Results directory not writable: {preferred_dir}. Saving to: {alt.parent}")
+            return alt
+        cwd_alt = Path.cwd() / filename
+        if _ensure_parent_writable(cwd_alt):
+            print(f"Results directory not writable: {preferred_dir}. Saving to current directory: {cwd_alt.parent}")
+            return cwd_alt
+        # Give up: return preferred (will error in predict), but with a clearer message later
+        return preferred
+
     ap = argparse.ArgumentParser(
         prog="alma-classifier",
         description="🩸🧬 ALMA Classifier – Epigenomic diagnosis of acute leukemia (research use only) 🧬🩸"
@@ -62,8 +95,7 @@ def main() -> None:
         
         # Set output to a demo results file in results/ folder
         results_dir = Path.cwd() / "results"
-        results_dir.mkdir(exist_ok=True)
-        output_file = results_dir / "demo_predictions.csv"
+        output_file = _pick_output_path(results_dir, "demo_predictions.csv")
     else:
         # Regular mode requires input data
         if not args.input_data:
@@ -73,7 +105,6 @@ def main() -> None:
         # If no output specified, create results/ folder and use default name
         if args.output is None:
             results_dir = Path.cwd() / "results"
-            results_dir.mkdir(exist_ok=True)
             input_path = Path(input_data)
             # Handle different file extensions appropriately
             if input_path.name.endswith('.bed.gz'):
@@ -84,9 +115,11 @@ def main() -> None:
                 stem = input_path.stem
             else:
                 stem = input_path.stem
-            output_file = results_dir / f"{stem}_predictions.csv"
+            output_file = _pick_output_path(results_dir, f"{stem}_predictions.csv")
         else:
-            output_file = args.output
+            output_file = Path(args.output)
+            if not _ensure_parent_writable(output_file):
+                ap.error(f"Cannot write to the specified output path: {output_file}. Choose a writable location.")
 
     set_deterministic()
     alma = ALMA()

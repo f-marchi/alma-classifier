@@ -63,7 +63,7 @@ alma-classifier --demo
 Run using your data:
 
 ```bash
-alma-classifier -i data.pkl
+alma-classifier -i path/to/your_data.pkl
 ```
 
 ## Input Formats

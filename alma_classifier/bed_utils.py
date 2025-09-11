@@ -1,9 +1,42 @@
 """BED file processing utilities for ALMA classifier."""
-import pandas as pd
-import numpy as np
+import os
 import gzip
 from pathlib import Path
 from typing import Union, Dict, List, Tuple
+
+import numpy as np
+import pandas as pd
+
+def _get_data_dir() -> Path:
+    """Resolve a readable data directory containing reference files.
+
+    Priority:
+    1) ALMA_DATA_DIR env var
+    2) /app/data (Docker image)
+    3) Package-adjacent ../data (site-packages sibling when installed from source)
+    4) User data dir: $XDG_DATA_HOME or ~/.local/share/alma-classifier/data
+    """
+    # 1) Env override
+    d = os.getenv("ALMA_DATA_DIR")
+    if d:
+        p = Path(d)
+        if p.exists():
+            return p
+    # 2) Docker image location
+    p = Path("/app/data")
+    if p.exists():
+        return p
+    # 3) Package-adjacent data (do not create)
+    p = Path(__file__).parent.parent / "data"
+    if p.exists():
+        return p
+    # 4) User data dir
+    xdg = os.getenv("XDG_DATA_HOME")
+    if xdg:
+        p = Path(xdg) / "alma-classifier" / "data"
+    else:
+        p = Path.home() / ".local" / "share" / "alma-classifier" / "data"
+    return p
 
 BED_COLUMNS = [
     "chrom", "start_position", "end_position", "modified_base_code", "score",
@@ -70,9 +103,12 @@ def process_bed_to_methylation(
     print(f"Processing BED file: {bed_file.name}")
     
     # Get reference mapping
-    ref_path = Path(__file__).parent.parent / "data" / "cpg_coordinates_hg38.bed.gz"
+    data_dir = _get_data_dir()
+    ref_path = data_dir / "cpg_coordinates_hg38.bed.gz"
     if not ref_path.exists():
-        raise FileNotFoundError(f"Reference file not found: {ref_path}")
+        raise FileNotFoundError(
+            "Reference file not found: {}. Set ALMA_DATA_DIR to the directory containing cpg_coordinates_hg38.bed.gz or mount it into /app/data.".format(ref_path)
+        )
     
     ref_df, coord_to_names = read_cpg_coordinates_hg38(ref_path)
     

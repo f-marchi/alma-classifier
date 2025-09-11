@@ -37,33 +37,33 @@ pip install alma-classifier
 
 ### Docker
 
-#### Demo
+Run demo:
 
 ```bash
-docker run --rm -v $(pwd):/output fmarchi/alma-classifier:0.2.0 \
-    alma-classifier --demo --output /output/demo_results.xlsx
+docker run --rm -v "$(pwd)":/work -w /work fmarchi/alma-classifier:0.2.0 \
+  alma-classifier --demo
 ```
 
-#### Your data
+Run using your data:
 
 ```bash
-## Transfer your input data to ./data/
-docker run --rm -v $(pwd):/data fmarchi/alma-classifier:0.1.4 \
-    alma-classifier --input /data/your_methylation_data.pkl --output /data/results.xlsx
+# CSV/CSV.GZ, BED/BED.GZ, or PKL
+docker run --rm -v "$(pwd)":/work -w /work fmarchi/alma-classifier:0.2.0 \
+  alma-classifier -i /work/your_data.pkl
 ```
 
-### pip (python 3.8)
+### Python 3.11 (CLI)
 
-#### Demo
+Run demo:
 
 ```bash
-alma-classifier --demo --output demo_results.csv
+alma-classifier --demo
 ```
 
-#### Your data
+Run using your data:
 
 ```bash
-alma-classifier --input data.pkl --output predictions.xlsx
+alma-classifier -i data.pkl
 ```
 
 ## Input Formats
@@ -99,6 +99,24 @@ modkit pileup \
 --ignore h \
 --ref ref/hg38.fna \
 --no-filtering
+```
+
+## CLI options
+
+```bash
+usage: alma-classifier [-h] [-i INPUT_DATA] [-o OUTPUT] [--download-models] [--demo] [--all_probs]
+
+🩸🧬 ALMA Classifier – Epigenomic diagnosis of acute leukemia (research use only) 🧬🩸
+
+options:
+  -h, --help            show this help message and exit
+  -i INPUT_DATA, --input_data INPUT_DATA
+                        Input file: .pkl with β‑values, .csv/.csv.gz with β‑values, or .bed/.bed.gz nanopore file
+  -o OUTPUT, --output OUTPUT
+                        .csv output (default: alongside input data)
+  --download-models     Download model weights from GitHub release
+  --demo                Run demo with example dataset
+  --all_probs           Include all subtype/class probabilities as separate columns in the output
 ```
 
 ## Output

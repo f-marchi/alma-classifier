@@ -137,12 +137,12 @@ Results include subtype classification, risk prediction, and confidence scores.
 
 ## Datasets
 
-Our training and nanopore test datasets are publicly available for research:
+Our datasets are publicly available for research:
 
 - [Methylation data](https://github.com/f-marchi/ALMA/releases/tag/v0.2.0)
 - [Clinical data](https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-025-62005-4/MediaObjects/41467_2025_62005_MOESM4_ESM.xlsx)
 
-If you would like to try to build better models, or explore other aspects of these data for research, go for it!
+If you would like to try to build better models, or explore other aspects of these data, go for it!
 
 ## Citation
 

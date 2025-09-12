@@ -135,6 +135,15 @@ Results include subtype classification, risk prediction, and confidence scores.
 - Follow preprocessing as instructed in "Input Formats" above. Different or erroneous preprocessing may lead to poor performance. This applies to bad wet-lab handling of samples.
 - The models will attempt to work with missing CpGs. Ideally, use Methylation Array 450k,EPIC or WGS Nanopore Seq with >5x coverage. Anything below that may compromise performance.
 
+## Datasets
+
+Our training and nanopore test datasets are publicly available for research:
+
+- [Methylation data](https://github.com/f-marchi/ALMA/releases/tag/v0.2.0)
+- [Clinical data](https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-025-62005-4/MediaObjects/41467_2025_62005_MOESM4_ESM.xlsx)
+
+If you would like to try to build better models, or explore other aspects of these data for research, go for it!
+
 ## Citation
 
 Marchi, F., Shastri, V.M., Marrero, R.J. et al. Epigenomic diagnosis and prognosis of Acute Myeloid Leukemia. Nat Commun 16, 6961 (2025). <https://doi.org/10.1038/s41467-025-62005-4>

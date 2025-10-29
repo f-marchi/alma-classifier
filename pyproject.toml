@@ -36,6 +36,9 @@ dependencies = [
 [project.optional-dependencies]
 torch = ["torch>=2.8,<3.0"]
 
+[project.urls]
+Repository = "https://github.com/f-marchi/alma-classifier"
+
 ############################
 #  Console script
 ############################

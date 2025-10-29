@@ -44,3 +44,6 @@ alma-classifier = "alma_classifier.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["alma_classifier*"]
+
+[tool.setuptools.package-data]
+alma_classifier = ["data/*"]

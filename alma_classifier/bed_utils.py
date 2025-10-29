@@ -8,14 +8,7 @@ import numpy as np
 import pandas as pd
 
 def _get_data_dir() -> Path:
-    """Resolve a readable data directory containing reference files.
-
-    Priority:
-    1) ALMA_DATA_DIR env var
-    2) /app/data (Docker image)
-    3) Package-adjacent ../data (site-packages sibling when installed from source)
-    4) User data dir: $XDG_DATA_HOME or ~/.local/share/alma-classifier/data
-    """
+    """Resolve a readable data directory containing reference files."""
     # 1) Env override
     d = os.getenv("ALMA_DATA_DIR")
     if d:
@@ -26,8 +19,9 @@ def _get_data_dir() -> Path:
     p = Path("/app/data")
     if p.exists():
         return p
-    # 3) Package-adjacent data (do not create)
-    p = Path(__file__).parent.parent / "data"
+    # 3) Packaged data alongside the module (wheel / sdist)
+    package_dir = Path(__file__).resolve().parent
+    p = package_dir / "data"
     if p.exists():
         return p
     # 4) User data dir

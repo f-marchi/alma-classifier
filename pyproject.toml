@@ -10,7 +10,7 @@ build-backend = "setuptools.build_meta"
 ############################
 [project]
 name = "alma-classifier"
-version = "0.2.1"
+version = "0.2.2"
 description = "Epigenomic diagnosis of acute leukemia"
 readme = "README.md"
 requires-python = ">=3.10,<3.13"

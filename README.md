@@ -1,6 +1,5 @@
 # ALMA Classifier
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15636415.svg)](https://doi.org/10.5281/zenodo.15636415)
 [![Nat Commun](https://img.shields.io/badge/Nat%20Commun-2025-0a7bbc.svg)](https://www.nature.com/articles/s41467-025-62005-4)
 [![Downloads](https://static.pepy.tech/personalized-badge/alma-classifier?period=total&units=international_system&left_color=grey&right_color=blue&left_text=Downloads)](https://pepy.tech/project/alma-classifier)
 [![Python versions](https://img.shields.io/pypi/pyversions/alma-classifier.svg)](https://pypi.org/project/alma-classifier/)
@@ -142,7 +141,13 @@ Our datasets are publicly available for research:
 - [Methylation data](https://github.com/f-marchi/ALMA/releases/tag/v0.2.0)
 - [Clinical data](https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-025-62005-4/MediaObjects/41467_2025_62005_MOESM4_ESM.xlsx)
 
-If you would like to try to build better models, or explore other aspects of these data, go for it!
+## Join us in building alma-classifier v3!
+
+We are developing ALMA-Classifier v3, featuring an enhanced model architecture and a substantially expanded reference dataset that includes new hematologic disease populations. 
+
+Our training data, model weights, and code will remain fully open-source and open-access to accelerate research and clinical translation.
+
+If you are interested in contributing data, collaborating on model development, or integrating the classifier into your research or clinical pipeline, please reach out to francisco@almagenomics.com.
 
 ## Citation
 

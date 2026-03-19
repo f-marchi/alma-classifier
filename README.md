@@ -6,7 +6,7 @@
 [![Docker pulls](https://img.shields.io/docker/pulls/fmarchi/alma-classifier.svg)](https://hub.docker.com/r/fmarchi/alma-classifier)
 [![Research Use Only](https://img.shields.io/badge/Use-Research%20Only-orange.svg)](#important-limitations)
 
-Epigenomic diagnosis of acute leukemia and prognosis of AML.
+Epigenomic diagnosis of acute leukemias and prognosis of AML.
 
 ## Models
 
@@ -81,7 +81,7 @@ Prepare a .pkl (or csv.gz) dataset with the following structure:
 - **Columns**: CpG sites
 - **Values**: Beta values (0-1)
 
-Got .idat files? Use [SeSAMe](https://github.com/zwdzwd/sesame) first.
+Got **.idat** files? Use use our automatic platform [https://almagenomics.com](https://almagenomics.com/) or process manually with [SeSAMe](https://github.com/zwdzwd/sesame) first.
 
 ### Nanopore whole genome sequencing
 
@@ -92,7 +92,7 @@ Follow the standard bedMethyl format with these key columns:
 - **Column 4**: `modified_base_code` - Single letter code for modified base
 - **Column 11**: `fraction_modified` - Percentage of methylation (0-100)
 
-Got .bam files? Use [modkit](https://nanoporetech.github.io/modkit/intro_pileup.html) first:
+Got **.bam** files? Use use our automatic platform [https://almagenomics.com](https://almagenomics.com/) or process manually with [modkit](https://nanoporetech.github.io/modkit/intro_pileup.html) first:
 
 ```bash
 modkit pileup \
@@ -140,14 +140,6 @@ Our datasets are publicly available for research:
 
 - [Methylation data](https://github.com/f-marchi/ALMA/releases/tag/v0.2.0)
 - [Clinical data](https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-025-62005-4/MediaObjects/41467_2025_62005_MOESM4_ESM.xlsx)
-
-## Join us in building alma-classifier v3!
-
-We are developing ALMA-Classifier v3, featuring an enhanced model architecture and a substantially expanded reference dataset that includes new hematologic disease populations. 
-
-Our training data, model weights, and code will remain fully open-source and open-access to accelerate research and clinical translation.
-
-If you are interested in contributing data, collaborating on model development, or integrating the classifier into your research or clinical pipeline, please reach out to francisco@almagenomics.com.
 
 ## Citation
 

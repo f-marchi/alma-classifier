@@ -33,7 +33,10 @@ RUN pip install --upgrade pip && \
 
 # Copy source AFTER dependency install for better caching
 COPY alma_classifier ./alma_classifier
-COPY data ./data
+
+# The checked-in reference bed ships inside the package source, but runtime
+# code may expect it at /app/data as well.
+RUN mkdir -p /app/data && cp -r /app/alma_classifier/data/. /app/data/
 
 # Install package (production, non-editable) to embed version metadata
 RUN pip install --no-cache-dir .

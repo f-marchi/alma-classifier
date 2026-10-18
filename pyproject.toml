@@ -10,8 +10,8 @@ build-backend = "setuptools.build_meta"
 ############################
 [project]
 name = "alma-classifier"
-version = "0.2.2"
-description = "Epigenomic diagnosis of acute leukemia"
+version = "0.2.3"
+description = "Legacy ALMA classifier; superseded by ALMA3"
 readme = "README.md"
 requires-python = ">=3.10,<3.13"
 license = "GPL-3.0-only"
@@ -37,6 +37,7 @@ torch = ["torch>=2.8,<3.0"]
 
 [project.urls]
 Repository = "https://github.com/f-marchi/alma-classifier"
+ALMA3 = "https://github.com/almagx/alma3"
 
 ############################
 #  Console script

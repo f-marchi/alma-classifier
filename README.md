@@ -1,6 +1,10 @@
-# ALMA Classifier
+# ALMA v2
 
-> **ALMA-classifier is retired. Use [ALMA3](https://github.com/almagx/alma3) for new classification analyses. Historical releases remain available.**
+> ### Use ALMA3 for new classification analyses
+>
+> ALMA v3 is now available in the **[ALMA3 repository](https://github.com/almagx/alma3)**.
+>
+> This repository contains **ALMA v2 (legacy)**, preserved for reproducing earlier results.
 
 [![Nat Commun](https://img.shields.io/badge/Nat%20Commun-2025-0a7bbc.svg)](https://www.nature.com/articles/s41467-025-62005-4)
 [![Downloads](https://static.pepy.tech/personalized-badge/alma-classifier?period=total&units=international_system&left_color=grey&right_color=blue&left_text=Downloads)](https://pepy.tech/project/alma-classifier)
